@@ -25,6 +25,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-auth-compat.js"></script>
     <style>
+        /* ========== GLOBAL ========== */
         * { margin:0; padding:0; box-sizing:border-box; user-select:none; }
         body { font-family:'Inter',sans-serif; background:radial-gradient(circle at 20% 30%,#0a0a0a,#000000); min-height:100vh; display:flex; align-items:center; justify-content:center; }
         .screen { position:fixed; top:0; left:0; width:100%; height:100%; overflow-y:auto; padding:1.5rem; display:flex; flex-direction:column; align-items:center; justify-content:flex-start; transition:opacity 0.4s; }
@@ -79,6 +80,7 @@
         .menu-overlay { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:150; visibility:hidden; opacity:0; transition:0.2s; }
         .menu-overlay.active { visibility:visible; opacity:1; }
         .menu-item { background:rgba(30,30,50,0.8); border:1px solid #ff5555; border-radius:40px; padding:0.8rem 1rem; color:#ffcccc; font-weight:600; cursor:pointer; text-align:center; }
+        .menu-item:hover { background:rgba(60,60,80,0.8); }
         .chart-row { display:flex; align-items:center; gap:8px; margin-bottom:12px; font-size:12px; }
         .chart-label { width:70px; text-align:left; color:#ffcccc; }
         .chart-bar-container { flex:1; background:#1a1a2a; border-radius:12px; overflow:hidden; height:28px; }
@@ -103,11 +105,12 @@
         .mining-rate { font-size:2rem; font-weight:800; background:linear-gradient(135deg,#ff8888,#ff2222); -webkit-background-clip:text; background-clip:text; color:transparent; margin:0.5rem 0; }
         .action-buttons { display:flex; justify-content:center; gap:1rem; margin:0.5rem auto 1rem; flex-wrap:wrap; }
         .action-btn { background:linear-gradient(95deg,#ff3333,#990000); border:none; padding:0.6rem 1.2rem; border-radius:50px; color:white; font-weight:bold; cursor:pointer; min-width:120px; }
-        .slideshow-container { background:rgba(5,10,22,0.8); border-radius:1.5rem; padding:0.8rem; margin:0.5rem 0 1rem; border:1px solid #ff5555; overflow:hidden; min-height:120px; }
+        .slideshow-container { background:rgba(5,10,22,0.8); border-radius:1.5rem; padding:0.8rem; margin:0.5rem 0 1rem; border:1px solid #ff5555; overflow:hidden; min-height:120px; cursor:pointer; }
         .slideshow-wrapper { display:flex; transition:transform 0.5s; }
         .slideshow-slide { flex:0 0 100%; padding:0.8rem; text-align:center; }
         .slideshow-title { font-size:1.2rem; font-weight:bold; color:#ffaaaa; margin-bottom:0.5rem; }
         .slideshow-text { color:#ffcccc; font-size:0.85rem; }
+        .slideshow-link { display:inline-block; margin-top:0.5rem; color:#ffd700; text-decoration:underline; font-weight:bold; }
         .slideshow-timer { text-align:center; font-size:0.7rem; color:#ff8888; margin-top:0.3rem; }
         .stats { background:rgba(0,0,0,0.6); border-radius:40px; padding:0.6rem; margin-top:0.8rem; display:flex; justify-content:space-between; color:#ffcccc; }
         .ecosystem-grid { display:flex; flex-direction:column; gap:1.2rem; max-width:400px; margin:1rem auto; }
@@ -156,15 +159,7 @@
         .custom-modal-box textarea { width:100%; background:#1a1a2a; border:1px solid #ff5555; border-radius:1rem; padding:1rem; color:white; font-family:monospace; font-size:0.8rem; resize:none; }
         .referral-buttons-row { display:flex; gap:0.8rem; margin-top:0.5rem; flex-wrap:wrap; justify-content:center; }
         .referral-buttons-row .action-btn { min-width:unset; flex:1 1 auto; padding:0.6rem 1rem; font-size:0.9rem; }
-        .boost-btn { background:linear-gradient(95deg,#ff3333,#990000); border:none; padding:0.6rem 1.2rem; border-radius:50px; color:white; font-weight:bold; cursor:pointer; font-size:0.9rem; margin-top:0.8rem; display:inline-flex; align-items:center; gap:0.5rem; }
-        .boost-btn:disabled { opacity:0.5; cursor:not-allowed; }
         .bonus-cooldown { color:#ffaaaa; font-size:0.75rem; margin-top:0.3rem; }
-        .ad-modal-countdown { font-size:2.5rem; font-weight:bold; color:#ffffff; margin:1rem 0; }
-        .ad-modal-progress { background:#1a1a2a; border-radius:20px; height:12px; width:100%; margin:1rem 0; overflow:hidden; }
-        .ad-modal-progress-bar { height:100%; width:100%; background:linear-gradient(90deg,#228B22,#00ff00); transition:width 1s linear; }
-        .loader { border:4px solid rgba(255,85,85,0.2); border-top:4px solid #ff5555; border-radius:50%; width:40px; height:40px; animation:spin 1s linear infinite; margin:1rem auto; }
-        @keyframes spin { 0%{transform:rotate(0deg);} 100%{transform:rotate(360deg);} }
-        .apk-download-btn { background:linear-gradient(95deg,#ff3333,#990000); border:none; padding:0.9rem 1.5rem; border-radius:60px; font-weight:bold; color:white; font-size:1.1rem; text-decoration:none; display:inline-block; width:100%; margin:0.8rem 0; cursor:pointer; box-shadow:0 0 15px rgba(255,50,50,0.5); }
         .airdrop-premium { width:100%; max-width:420px; margin:0 auto; text-align:center; }
         .airdrop-logo-wrapper { position:relative; width:200px; height:200px; margin:1rem auto 2rem; }
         .airdrop-logo-core { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:3.5rem; color:#ffd700; filter:drop-shadow(0 0 12px #ffd700); z-index:2; animation:corePulse 1.8s ease-in-out infinite; }
@@ -191,6 +186,38 @@
             display:none;
         }
         .referral-signup-banner.show { display:block; }
+        /* Wallet and marketplace styles */
+        .wallet-screen { max-width:480px; width:100%; margin:0 auto; }
+        .wallet-balance-card { background:rgba(5,10,22,0.8); border-radius:2rem; padding:2rem 1rem; text-align:center; border:2px solid #ff5555; margin-bottom:1.5rem; }
+        .wallet-balance-value { font-size:3rem; font-weight:800; background:linear-gradient(135deg,#ffffff,#ffaaaa); -webkit-background-clip:text; background-clip:text; color:transparent; }
+        .wallet-actions { display:flex; justify-content:center; gap:1rem; margin-bottom:1.5rem; }
+        .wallet-action-btn { flex:1; max-width:150px; background:linear-gradient(95deg,#ff3333,#990000); border:none; padding:1rem; border-radius:50px; color:white; font-weight:bold; cursor:pointer; text-align:center; }
+        .wallet-action-btn i { font-size:1.5rem; display:block; margin-bottom:0.3rem; }
+        .wallet-history { background:rgba(5,10,22,0.7); border-radius:1.5rem; padding:1rem; border:1px solid rgba(255,50,50,0.4); }
+        .history-item { display:flex; align-items:center; padding:0.5rem 0; border-bottom:1px solid rgba(255,80,80,0.2); }
+        .history-item:last-child { border-bottom:none; }
+        .history-icon { width:40px; text-align:center; font-size:1.2rem; }
+        .history-details { flex:1; margin-left:0.5rem; }
+        .history-name { font-weight:bold; color:#ffaaaa; }
+        .history-date { font-size:0.7rem; color:#ff8888; }
+        .history-amount { font-weight:bold; }
+        .history-amount.incoming { color:#00cc00; }
+        .history-amount.outgoing { color:#ff5555; }
+        .send-form { margin-top:1rem; }
+        .send-form label { display:block; text-align:left; color:#ffaaaa; margin-bottom:0.3rem; }
+        .send-form input { width:100%; background:rgba(0,0,0,0.5); border:1px solid #ff5555; color:white; padding:0.7rem; border-radius:30px; margin-bottom:0.8rem; }
+        .apk-auth-link { display:block; text-align:center; margin-top:1rem; color:#ffd700; text-decoration:underline; font-weight:bold; cursor:pointer; }
+        .marketplace-screen { max-width:480px; width:100%; margin:0 auto; }
+        .marketplace-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; }
+        .listing-card { background:rgba(5,10,22,0.8); border-radius:1.5rem; padding:1rem; border:2px solid #ff5555; margin-bottom:1rem; display:flex; justify-content:space-between; align-items:center; }
+        .listing-info { flex:1; }
+        .listing-amount { font-size:1.5rem; font-weight:bold; color:white; }
+        .listing-price { color:#ffcccc; font-size:0.9rem; }
+        .listing-total { color:#ffd700; font-weight:bold; }
+        .buy-btn { background:#228B22; border:none; padding:0.5rem 1rem; border-radius:30px; color:white; font-weight:bold; cursor:pointer; }
+        .cancel-btn { background:#990000; border:none; padding:0.3rem 0.8rem; border-radius:30px; color:white; cursor:pointer; font-size:0.8rem; }
+        .pending-label { color:#ff8888; font-style:italic; }
+        .locked-balance { background:rgba(0,0,0,0.5); border-radius:20px; padding:0.4rem 1rem; border:1px solid #ff5555; color:#ffaaaa; font-size:0.85rem; display:inline-block; }
     </style>
 </head>
 <body>
@@ -229,6 +256,7 @@
             <button class="auth-btn" id="forgotBtn">Send Reset Email</button>
             <div class="auth-links"><span class="auth-link" id="showLoginFromForgot">Back to Log In</span></div>
         </div>
+        <a href="https://github.com/metafooot/Metafoott/releases/tag/Metafoot" target="_blank" class="apk-auth-link">📲 Get the Android App (APK)</a>
     </div>
 </div>
 
@@ -254,6 +282,7 @@
         <div class="menu-item" data-action="profile"><i class="fas fa-user"></i> Profile</div>
         <div class="menu-item" data-action="airdropDashboard"><i class="fas fa-chart-pie"></i> Airdrop Dashboard</div>
         <div class="menu-item" data-action="halving"><i class="fas fa-chart-line"></i> Halving</div>
+        <div class="menu-item" data-action="downloadApk"><i class="fas fa-download"></i> Download APK</div>
         <div class="menu-item" data-action="lock"><i class="fas fa-lock"></i> Sign Out</div>
     </div>
     <div id="menuOverlay" class="menu-overlay"></div>
@@ -262,6 +291,8 @@
         <div class="nav-item" id="navHome"><i class="fas fa-home"></i><span>Home</span></div>
         <div class="nav-item" id="navReferral"><i class="fas fa-link"></i><span>Referral</span></div>
         <div class="nav-item" id="navTask"><i class="fas fa-tasks"></i><span>Task</span></div>
+        <div class="nav-item" id="navMarketplace"><i class="fas fa-store"></i><span>Market</span></div>
+        <div class="nav-item" id="navWallet"><i class="fas fa-wallet"></i><span>Wallet</span></div>
         <div class="nav-item" id="navEcosystem"><i class="fas fa-globe"></i><span>Ecosystem</span></div>
     </div>
 
@@ -284,8 +315,7 @@
             <div id="actionButtonsContainer" class="action-buttons">
                 <button class="action-btn" id="trainBtn"><i class="fas fa-dumbbell"></i> Train Player</button>
             </div>
-            <button id="boostBtn" class="boost-btn" disabled>⚡ Boost</button>
-            <div id="bonusCooldownText" class="bonus-cooldown"></div>
+            <!-- Boost button removed -->
             <div style="margin:1rem auto; max-width:480px;">
                 <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-3940256099942544" data-ad-slot="6303424663" data-ad-format="auto" data-full-width-responsive="true"></ins>
                 <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
@@ -297,7 +327,7 @@
         </div>
     </div>
 
-    <!-- Referral Screen (auto only) -->
+    <!-- Referral Screen -->
     <div id="referralScreen" class="screen hidden">
         <div class="info-screen">
             <div class="info-card" style="cursor:default;max-width:500px;margin:0 auto;">
@@ -336,6 +366,45 @@
         </div>
     </div>
 
+    <!-- Marketplace Screen -->
+    <div id="marketplaceScreen" class="screen hidden">
+        <div class="marketplace-screen">
+            <div class="marketplace-header">
+                <h2 style="color:#ffaaaa;"><i class="fas fa-store"></i> Marketplace</h2>
+                <button class="action-btn" id="createListingBtn">+ Sell $FOOT</button>
+            </div>
+            <div id="eligibilityInfo" class="locked-balance">You must have spent at least 800 $FOOT on training to sell.</div>
+            <div id="lockedBalanceInfo" class="locked-balance">Locked in escrow: <span id="lockedAmount">0</span> $FOOT</div>
+            <h3 style="color:#ffcccc; margin:1rem 0;">Open Listings</h3>
+            <div id="openListingsContainer"></div>
+            <h3 style="color:#ffcccc; margin:1rem 0;">My Listings & Purchases</h3>
+            <div id="myListingsContainer"></div>
+        </div>
+    </div>
+
+    <!-- Wallet Screen -->
+    <div id="walletScreen" class="screen hidden">
+        <div class="wallet-screen">
+            <div class="wallet-balance-card">
+                <div style="font-size:1.2rem; color:#ffaaaa;">Total Balance</div>
+                <div class="wallet-balance-value" id="walletScreenBalance">0</div>
+                <div style="color:#ffcccc;">$FOOT</div>
+            </div>
+
+            <div class="wallet-actions">
+                <div class="wallet-action-btn" id="sendCoinBtn"><i class="fas fa-paper-plane"></i> Send</div>
+                <div class="wallet-action-btn" id="receiveCoinBtn"><i class="fas fa-qrcode"></i> Receive</div>
+            </div>
+
+            <div class="wallet-history">
+                <h3 style="color:#ffaaaa; margin-bottom:0.5rem;">Transaction History</h3>
+                <div id="walletHistoryList">
+                    <p style="color:#ff8888;">Loading transactions…</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Ecosystem Screen -->
     <div id="ecosystemScreen" class="screen hidden">
         <div style="text-align:center;max-width:500px;margin:0 auto;">
@@ -344,8 +413,8 @@
                 <div class="info-card stadium-card-highlight" id="stadiumCard">
                     <div class="eco-logo"><i class="fas fa-futbol"></i></div>
                     <div class="eco-title">🏟️ METAFOOT Stadium</div>
-                    <div class="eco-desc">Limited Edition · Only 1,000 available</div>
-                    <div class="stadium-count-badge" id="stadiumRemainingBadge">1,000 left</div>
+                    <div class="eco-desc">Limited Edition · Only 5,000 available</div>
+                    <div class="stadium-count-badge" id="stadiumRemainingBadge">5,000 left</div>
                 </div>
                 <div class="info-card" id="visionCard">
                     <div class="eco-logo"><i class="fas fa-chalkboard-user"></i></div>
@@ -356,7 +425,7 @@
         </div>
     </div>
 
-    <!-- Airdrop Dashboard (redesigned) -->
+    <!-- Airdrop Dashboard -->
     <div id="airdropDashboardScreen" class="screen hidden">
         <div class="airdrop-premium">
             <div class="airdrop-logo-wrapper">
@@ -414,7 +483,6 @@
 
 <!-- Modals -->
 <div id="customModalOverlay" class="custom-modal"><div class="custom-modal-box" id="customModalBox"></div></div>
-<div id="adModalOverlay" class="modal-overlay" style="z-index:4000;"><div class="halving-modal" style="text-align:center;"><h3 style="color:#ffaaaa;">📺 Watch a short ad to earn 0.5 $FOOT</h3><div class="ad-modal-countdown" id="adCountdownText">10</div><div class="ad-modal-progress"><div class="ad-modal-progress-bar" id="adProgressBar"></div></div><button id="adClaimBtn" class="action-btn" style="margin-top:1rem;" disabled>⏳ Please wait...</button><button id="adCloseBtn" class="close-modal" style="margin-top:0.5rem;">Close</button></div></div>
 <div id="loadingModalOverlay" class="custom-modal" style="z-index:4001;"><div class="custom-modal-box"><h3 style="color:#ffaaaa;">Restoring your wallet…</h3><div class="loader"></div><p style="color:#ffcccc; margin-top:1rem;">Fetching your data from the cloud.</p></div></div>
 
 <script>
@@ -422,7 +490,6 @@
     const firebaseConfig = {
         apiKey: "AIzaSyDsu_zlNzi_qC-psSKaiQjci6OxIra3h-k",
         authDomain: "metafoot-4c82b.firebaseapp.com",
-        databaseURL: "https://metafoot-4c82b-default-rtdb.europe-west1.firebasedatabase.app",
         projectId: "metafoot-4c82b",
         storageBucket: "metafoot-4c82b.firebasestorage.app",
         messagingSenderId: "358989878882",
@@ -432,6 +499,14 @@
     const db = firebase.firestore();
     const auth = firebase.auth();
 
+    // ===================== CONSTANTS =====================
+    const APK_DOWNLOAD_URL = 'https://github.com/metafooot/Metafoott/releases/tag/Metafoot';
+    const FOOT_PRICE_USDT = 0.02;
+    const ESCROW_ADDRESS = '0x7126590d91d980ccd796fef44d432def98b81a63'; // Polygon
+    const ESCROW_NETWORK = 'Polygon (USDT)';
+    const MIN_TRAINING_SPENT_FOR_SELLING = 800;  // NEW
+    const STADIUM_TOTAL_SUPPLY = 5000;
+
     // ===================== GLOBALS =====================
     let currentUserId = null;
     let currentReferralCode = null;
@@ -440,16 +515,19 @@
     const REF_CODE_V2_KEY = 'metafoot_ref_code_v2';
     const attributes = ['speed','shoot','power','intelligence','brilliance','accuracy'];
     let playerAttrs = {};
+    let totalTrainingSpent = 0;
+    let trainingEligible = false;
+    let trainingEnabled = true;
     const BASE_COST = 0.3;
     const TIER_SIZE = 20;
     const TG_LAST_KEY = 'metafoot_last_telegram_claim';
     const X_LAST_KEY = 'metafoot_last_x_claim';
-    const COOLDOWN_MS = 4 * 60 * 60 * 1000; // 4 hours
+    const COOLDOWN_MS = 4 * 60 * 60 * 1000;
     const TOTAL_AIRDROP_CAP = 300000000;
     const customModal = document.getElementById('customModalOverlay');
     const customModalBox = document.getElementById('customModalBox');
 
-    // Capture referral code from URL
+    // ------------------- Helper Functions -------------------
     function captureReferralFromUrl() {
         const params = new URLSearchParams(window.location.search);
         const ref = params.get('ref');
@@ -465,7 +543,11 @@
     function getUserBalance() { let b = parseFloat(getStorage(USER_BALANCE_KEY)); return isNaN(b)?0:b; }
     function setUserBalance(amount) { setStorage(USER_BALANCE_KEY, amount); updateWalletDisplay(); }
     function addToUserBalance(amount) { setUserBalance(getUserBalance()+amount); }
-    function updateWalletDisplay() { document.getElementById('walletBalance').innerText = getUserBalance().toLocaleString(); }
+    function updateWalletDisplay() {
+        document.getElementById('walletBalance').innerText = getUserBalance().toLocaleString();
+        const walletScreenBalance = document.getElementById('walletScreenBalance');
+        if (walletScreenBalance) walletScreenBalance.innerText = getUserBalance().toLocaleString();
+    }
     function formatTime(ms) { const h=Math.floor(ms/3600000); const m=Math.floor((ms%3600000)/60000); const s=Math.floor((ms%60000)/1000); return `${h}h ${m}m ${s}s`; }
     function getUpgradeCost(level) { return BASE_COST * Math.pow(2, Math.floor(level/TIER_SIZE)); }
     function calcTotalSpent(attrs) { let total=0; for(let attr in attrs) for(let l=0; l<(attrs[attr]||0); l++) total += getUpgradeCost(l); return total; }
@@ -633,6 +715,11 @@
 
         document.getElementById('signOutBtn').addEventListener('click', () => auth.signOut());
         document.querySelector('[data-action="lock"]').addEventListener('click', () => auth.signOut());
+        document.querySelector('[data-action="downloadApk"]').addEventListener('click', () => {
+            window.open(APK_DOWNLOAD_URL, '_blank');
+            document.getElementById('sideMenu').classList.remove('open');
+            document.getElementById('menuOverlay').classList.remove('active');
+        });
 
         auth.onAuthStateChanged(async (user) => {
             if (user) {
@@ -662,8 +749,18 @@
                     const merged = {};
                     for (const attr of attributes) merged[attr] = Math.max(parsedLocal[attr] || 0, data.attributes[attr] || 0);
                     setStorage('player_training_attrs', JSON.stringify(merged));
-                    loadAttributes();
+                    playerAttrs = merged;
+                    calculateEligibility();  // Recompute based on spent
+                } else {
+                    playerAttrs = {};
+                    calculateEligibility();
                 }
+                if (data.trainingEligible !== undefined) {
+                    trainingEligible = data.trainingEligible;
+                } else {
+                    trainingEligible = calculateEligibility();
+                }
+                updateEligibilityUI();
                 if (data.lastClaim) setStorage(LAST_CLAIM_KEY, data.lastClaim);
                 if (data.username) setStorage('profile_username', data.username);
                 if (data.referralCode) setStorage(REF_CODE_V2_KEY, data.referralCode);
@@ -684,6 +781,7 @@
                 email: auth.currentUser.email,
                 balance: getUserBalance(),
                 attributes: playerAttrs,
+                trainingEligible: trainingEligible,
                 username: getStorage('profile_username') || '',
                 lastClaim: parseInt(getStorage(LAST_CLAIM_KEY)) || 0,
                 referralCode: currentReferralCode || getStorage(REF_CODE_V2_KEY) || '',
@@ -714,7 +812,7 @@
                     setStorage('profile_username', username);
                     document.getElementById('usernameDisplay').innerText = username;
                     customModal.classList.remove('active');
-                    await saveUserToFirestore(); // ensure username and referralCode saved
+                    await saveUserToFirestore();
                 } catch(e) { err.innerText = e.message; }
             });
         }
@@ -773,7 +871,7 @@
                     const userData = userDoc.exists ? userDoc.data() : { balance:0, hasStadium:false };
                     const globalData = globalDoc.exists ? globalDoc.data() : { stadiumsSold:0, stadiumOwners:{} };
                     if (userData.hasStadium) throw new Error('You already own a stadium');
-                    if (globalData.stadiumsSold >= 1000) throw new Error('All stadiums sold out');
+                    if (globalData.stadiumsSold >= STADIUM_TOTAL_SUPPLY) throw new Error('All stadiums sold out');
                     if (userData.balance < 2000) throw new Error('Insufficient balance. You need 2000 $FOOT.');
                     const newBalance = userData.balance - 2000;
                     const newSold = (globalData.stadiumsSold || 0) + 1;
@@ -832,8 +930,38 @@
             if (diff <= 0) timer.innerText = 'Ready!';
             else { const h=Math.floor(diff/3600000); const m=Math.floor((diff%3600000)/60000); const s=Math.floor((diff%60000)/1000); timer.innerText = `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`; }
         }
-        function loadAttributes() { const stored = getStorage('player_training_attrs'); playerAttrs = stored ? JSON.parse(stored) : Object.fromEntries(attributes.map(a => [a,0])); }
-        function saveAttributes() { setStorage('player_training_attrs', JSON.stringify(playerAttrs)); }
+
+        function calculateEligibility() {
+            totalTrainingSpent = calcTotalSpent(playerAttrs);
+            trainingEligible = totalTrainingSpent >= MIN_TRAINING_SPENT_FOR_SELLING;
+            updateEligibilityUI();
+            return trainingEligible;
+        }
+
+        function updateEligibilityUI() {
+            const eligibilityInfo = document.getElementById('eligibilityInfo');
+            if (eligibilityInfo) {
+                if (trainingEligible) {
+                    eligibilityInfo.textContent = '✅ You are eligible to sell.';
+                    eligibilityInfo.style.color = '#00cc00';
+                } else {
+                    eligibilityInfo.textContent = `⛔ You need to spend at least ${MIN_TRAINING_SPENT_FOR_SELLING} $FOOT on training to sell. Currently spent: ${totalTrainingSpent.toFixed(2)} $FOOT`;
+                    eligibilityInfo.style.color = '#ff5555';
+                }
+            }
+            const createBtn = document.getElementById('createListingBtn');
+            if (createBtn) createBtn.disabled = !trainingEligible;
+        }
+
+        function loadAttributes() {
+            const stored = getStorage('player_training_attrs');
+            playerAttrs = stored ? JSON.parse(stored) : Object.fromEntries(attributes.map(a => [a,0]));
+            calculateEligibility();
+        }
+        function saveAttributes() {
+            setStorage('player_training_attrs', JSON.stringify(playerAttrs));
+            calculateEligibility();
+        }
         function renderTrainingScreen() {
             const balance = getUserBalance();
             document.getElementById('trainingBalance').innerText = balance.toLocaleString();
@@ -861,7 +989,6 @@
                         saveAttributes();
                         renderTrainingScreen();
                         updateWalletDisplay();
-                        // No Firestore save here – will save when leaving training screen
                     } else showModal('Need more $FOOT', `You need ${cost.toFixed(2)} $FOOT.`);
                 });
             });
@@ -871,7 +998,16 @@
                 return `<div class="chart-row"><div class="chart-label">Lvl ${lvl}</div><div class="chart-bar-container"><div class="chart-bar" style="width:${(cost/maxCost)*100}%;"></div></div><div class="chart-value">${cost.toFixed(2)}</div></div>`;
             }).join('');
         }
-        function openTrainingScreen() { loadAttributes(); renderTrainingScreen(); hideAllScreens(); document.getElementById('trainingScreen').classList.remove('hidden'); }
+        function openTrainingScreen() {
+            if (!trainingEnabled) {
+                showModal('Training Disabled', 'Training is temporarily disabled. Please try again later.');
+                return;
+            }
+            loadAttributes();
+            renderTrainingScreen();
+            hideAllScreens();
+            document.getElementById('trainingScreen').classList.remove('hidden');
+        }
         function hideAllScreens() {
             const trainingScreen = document.getElementById('trainingScreen');
             if (trainingScreen && !trainingScreen.classList.contains('hidden')) {
@@ -886,13 +1022,536 @@
                 roleHeader.innerHTML = `<div class="role-badge">⚡ Player Mode</div><h1><i class="fas fa-futbol"></i> Player Mining</h1>`;
                 document.getElementById('switchToPlayerBtn').classList.add('active'); document.getElementById('switchToManagerBtn').classList.remove('active');
                 actionContainer.innerHTML = '<button class="action-btn" id="trainBtn"><i class="fas fa-dumbbell"></i> Train Player</button>';
-                document.getElementById('trainBtn').addEventListener('click', ()=> { openTrainingScreen(); });
+                document.getElementById('trainBtn').addEventListener('click', openTrainingScreen);
+                updateTrainingButton();
             } else {
                 roleHeader.innerHTML = `<div class="role-badge">👔 Manager Mode</div><h1><i class="fas fa-trophy"></i> Manager Mining</h1>`;
                 document.getElementById('switchToManagerBtn').classList.add('active'); document.getElementById('switchToPlayerBtn').classList.remove('active');
                 actionContainer.innerHTML = '';
             }
             setStorage('last_active_role', role);
+        }
+
+        function updateTrainingButton() {
+            const trainBtn = document.getElementById('trainBtn');
+            if (trainBtn) {
+                trainBtn.disabled = !trainingEnabled;
+                if (!trainingEnabled) {
+                    trainBtn.innerHTML = '<i class="fas fa-ban"></i> Training Off';
+                    trainBtn.title = 'Training is currently disabled by admin';
+                } else {
+                    trainBtn.innerHTML = '<i class="fas fa-dumbbell"></i> Train Player';
+                    trainBtn.title = '';
+                }
+            }
+        }
+
+        async function loadTrainingStatus() {
+            try {
+                const statsDoc = await db.collection('global').doc('stats').get();
+                if (statsDoc.exists) {
+                    trainingEnabled = statsDoc.data().trainingEnabled !== false;
+                } else {
+                    trainingEnabled = true;
+                }
+            } catch(e) {
+                trainingEnabled = true;
+            }
+            updateTrainingButton();
+        }
+
+        // ===================== WALLET FUNCTIONS =====================
+        async function sendCoin(toUsernameOrId, amount) {
+            if (!currentUserId) throw new Error('Not logged in');
+            if (!toUsernameOrId || amount <= 0) throw new Error('Invalid recipient or amount');
+            if (toUsernameOrId === currentUserId || toUsernameOrId === getStorage('profile_username')) throw new Error('Cannot send to yourself');
+
+            if (!trainingEligible) {
+                throw new Error(`You need to spend at least ${MIN_TRAINING_SPENT_FOR_SELLING} $FOOT on training to send $FOOT.`);
+            }
+
+            let recipientDoc;
+            if (toUsernameOrId.startsWith('@')) {
+                const username = toUsernameOrId.substring(1).toLowerCase();
+                const usernameDoc = await db.collection('usernames').doc(username).get();
+                if (!usernameDoc.exists) throw new Error('Username not found');
+                recipientDoc = await db.collection('users').doc(usernameDoc.data().uid).get();
+            } else {
+                recipientDoc = await db.collection('users').doc(toUsernameOrId).get();
+            }
+            if (!recipientDoc.exists) throw new Error('Recipient not found');
+
+            if (!recipientDoc.data().trainingEligible) {
+                throw new Error('Recipient is not eligible to receive $FOOT.');
+            }
+
+            const recipientId = recipientDoc.id;
+            const senderRef = db.collection('users').doc(currentUserId);
+            const recipientRef = db.collection('users').doc(recipientId);
+            const transfersRef = db.collection('transfers');
+
+            try {
+                await db.runTransaction(async (transaction) => {
+                    const senderDoc = await transaction.get(senderRef);
+                    const recipientDocSnap = await transaction.get(recipientRef);
+                    if (!senderDoc.exists) throw new Error('Sender does not exist');
+                    if (!recipientDocSnap.exists) throw new Error('Recipient does not exist');
+
+                    const senderBalance = senderDoc.data().balance || 0;
+                    if (senderBalance < amount) throw new Error('Insufficient balance');
+
+                    const newSenderBalance = senderBalance - amount;
+                    const newRecipientBalance = (recipientDocSnap.data().balance || 0) + amount;
+
+                    transaction.set(senderRef, { balance: newSenderBalance }, { merge: true });
+                    transaction.set(recipientRef, { balance: newRecipientBalance }, { merge: true });
+                    transaction.add(transfersRef, {
+                        from: currentUserId,
+                        to: recipientId,
+                        amount: amount,
+                        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                    return newSenderBalance;
+                }).then((newBalance) => {
+                    setUserBalance(newBalance);
+                    updateWalletDisplay();
+                    showModal('Transfer Successful', `Sent ${amount} $FOOT to ${recipientDoc.data().username || recipientId}`);
+                    renderWalletHistory();
+                });
+            } catch (e) {
+                showModal('Transfer Failed', e.message);
+            }
+        }
+
+        async function renderWalletHistory() {
+            if (!currentUserId) return;
+            const historyContainer = document.getElementById('walletHistoryList');
+            historyContainer.innerHTML = '<p style="color:#ff8888;">Loading…</p>';
+            try {
+                const transfersSnapshot = await db.collection('transfers')
+                    .where('from', '==', currentUserId)
+                    .orderBy('timestamp', 'desc')
+                    .limit(20)
+                    .get();
+                const transfersSnapshot2 = await db.collection('transfers')
+                    .where('to', '==', currentUserId)
+                    .orderBy('timestamp', 'desc')
+                    .limit(20)
+                    .get();
+
+                const transfers = [];
+                transfersSnapshot.forEach(doc => transfers.push({ id: doc.id, data: doc.data(), type: 'outgoing' }));
+                transfersSnapshot2.forEach(doc => transfers.push({ id: doc.id, data: doc.data(), type: 'incoming' }));
+                transfers.sort((a,b) => (b.data.timestamp?.toMillis?.() || 0) - (a.data.timestamp?.toMillis?.() || 0));
+
+                if (transfers.length === 0) {
+                    historyContainer.innerHTML = '<p style="color:#ffcccc;">No transactions yet.</p>';
+                    return;
+                }
+
+                historyContainer.innerHTML = transfers.map(t => {
+                    const otherId = t.type === 'outgoing' ? t.data.to : t.data.from;
+                    const amount = t.data.amount;
+                    const date = t.data.timestamp ? new Date(t.data.timestamp.toMillis()).toLocaleString() : '—';
+                    const otherName = otherId === currentUserId ? 'You' : (otherId.substring(0,8) + '…');
+                    const icon = t.type === 'outgoing' ? 'fa-arrow-up' : 'fa-arrow-down';
+                    const amountClass = t.type === 'outgoing' ? 'outgoing' : 'incoming';
+                    const sign = t.type === 'outgoing' ? '-' : '+';
+                    return `<div class="history-item">
+                        <div class="history-icon"><i class="fas ${icon}"></i></div>
+                        <div class="history-details">
+                            <div class="history-name">${t.type === 'outgoing' ? 'To: ' : 'From: '}${otherName}</div>
+                            <div class="history-date">${date}</div>
+                        </div>
+                        <div class="history-amount ${amountClass}">${sign}${amount.toFixed(2)} $FOOT</div>
+                    </div>`;
+                }).join('');
+            } catch (e) {
+                console.error('Error fetching history:', e);
+                historyContainer.innerHTML = '<p style="color:#ff8888;">Failed to load history.</p>';
+            }
+        }
+
+        function openSendModal() {
+            if (!trainingEligible) {
+                showModal('Not Eligible', `You need to spend at least ${MIN_TRAINING_SPENT_FOR_SELLING} $FOOT on training to send $FOOT.`);
+                return;
+            }
+            customModalBox.innerHTML = `
+                <h3 style="color:#ffaaaa;">Send $FOOT</h3>
+                <div class="send-form">
+                    <label>Recipient (Username or UID)</label>
+                    <input type="text" id="sendRecipient" placeholder="e.g., @john or UID">
+                    <label>Amount</label>
+                    <input type="number" id="sendAmount" min="0.01" step="0.01" placeholder="0.00">
+                    <button class="action-btn" id="sendConfirmBtn" style="margin-top:1rem;">Send</button>
+                    <button class="action-btn" style="background:#333; margin-top:0.5rem;" id="sendCloseBtn">Close</button>
+                </div>
+            `;
+            customModal.classList.add('active');
+            document.getElementById('sendConfirmBtn').addEventListener('click', async () => {
+                const recipient = document.getElementById('sendRecipient').value.trim();
+                const amount = parseFloat(document.getElementById('sendAmount').value);
+                if (!recipient || isNaN(amount) || amount <= 0) {
+                    showModal('Invalid Input', 'Please enter a valid recipient and amount.');
+                    return;
+                }
+                customModal.classList.remove('active');
+                await sendCoin(recipient, amount);
+            });
+            document.getElementById('sendCloseBtn').addEventListener('click', () => {
+                customModal.classList.remove('active');
+            });
+        }
+
+        function openReceiveModal() {
+            customModalBox.innerHTML = `
+                <h3 style="color:#ffaaaa;">Receive $FOOT</h3>
+                <p style="color:#ffcccc; margin:1rem 0;">Share your User ID or Username to receive funds.</p>
+                <div class="static-value" style="margin-bottom:1rem;">
+                    <strong>User ID:</strong><br>
+                    <span class="copyable-text" id="receiveUserId">${currentUserId}</span>
+                    <button id="copyReceiveIdBtn" class="copy-id-btn"><i class="fas fa-copy"></i></button>
+                </div>
+                <div class="static-value">
+                    <strong>Username:</strong><br>
+                    <span class="copyable-text">${getStorage('profile_username') || 'Not set'}</span>
+                </div>
+                <button class="action-btn" onclick="document.getElementById('customModalOverlay').classList.remove('active')">Close</button>
+            `;
+            customModal.classList.add('active');
+            document.getElementById('copyReceiveIdBtn').addEventListener('click', () => {
+                copyToClipboard(currentUserId);
+                showModal('Copied', 'User ID copied to clipboard.');
+            });
+        }
+
+        // ===================== MARKETPLACE FUNCTIONS =====================
+        async function fetchEscrowSettings() {
+            try {
+                const doc = await db.collection('global').doc('escrowSettings').get();
+                if (doc.exists) {
+                    return doc.data();
+                } else {
+                    return { footPriceUsdt: FOOT_PRICE_USDT, escrowAddress: ESCROW_ADDRESS, network: ESCROW_NETWORK };
+                }
+            } catch (e) {
+                console.error('Error fetching escrow settings:', e);
+                return { footPriceUsdt: FOOT_PRICE_USDT, escrowAddress: ESCROW_ADDRESS, network: ESCROW_NETWORK };
+            }
+        }
+
+        async function createSellOrder(amountFoot, sellerExternalWallet, sellerNetwork) {
+            if (!currentUserId) return;
+            if (!trainingEligible) {
+                showModal('Not Eligible', `You need to spend at least ${MIN_TRAINING_SPENT_FOR_SELLING} $FOOT on training to sell.`);
+                return;
+            }
+            if (amountFoot <= 0 || !sellerExternalWallet) {
+                showModal('Invalid Input', 'Amount and wallet address are required.');
+                return;
+            }
+
+            const escrowSettings = await fetchEscrowSettings();
+            const totalUsdt = amountFoot * escrowSettings.footPriceUsdt;
+
+            const listingRef = db.collection('listings').doc();
+            try {
+                await listingRef.set({
+                    sellerUid: currentUserId,
+                    amountFoot: amountFoot,
+                    pricePerFoot: escrowSettings.footPriceUsdt,
+                    totalUsdt: totalUsdt,
+                    escrowAddress: escrowSettings.escrowAddress || ESCROW_ADDRESS,
+                    network: sellerNetwork || escrowSettings.network || ESCROW_NETWORK,
+                    sellerExternalWallet: sellerExternalWallet,
+                    status: 'pending_approval',
+                    buyerUid: null,
+                    buyerDetails: null,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                showModal('Listing Submitted', 'Your sell order is pending admin approval. Once approved, your $FOOT will be locked.');
+                loadMarketplace();
+            } catch (e) {
+                showModal('Failed to create listing', e.message);
+            }
+        }
+
+        async function buyListing(listingId) {
+            if (!currentUserId) return;
+            try {
+                const listingDoc = await db.collection('listings').doc(listingId).get();
+                if (!listingDoc.exists) throw new Error('Listing not found');
+                const listing = listingDoc.data();
+                if (listing.status !== 'open') throw new Error('Listing is not open');
+                if (listing.sellerUid === currentUserId) throw new Error('You cannot buy your own listing');
+                openBuyerDetailsModal(listingId, listing);
+            } catch (e) {
+                showModal('Purchase failed', e.message);
+            }
+        }
+
+        function openBuyerDetailsModal(listingId, listing) {
+            customModalBox.innerHTML = `
+                <h3 style="color:#ffaaaa;">Buy ${listing.amountFoot} $FOOT</h3>
+                <p style="color:#ffcccc;">Total cost: ${listing.totalUsdt.toFixed(2)} USDT (${listing.network})</p>
+                <div class="send-form">
+                    <label>Your Name</label>
+                    <input type="text" id="buyerName" placeholder="Full name">
+                    <label>Your Email</label>
+                    <input type="email" id="buyerEmail" placeholder="Email address">
+                    <label>Your External Wallet (for refunds)</label>
+                    <input type="text" id="buyerWallet" placeholder="Your USDT wallet address">
+                    <p style="color:#ffcccc; font-size:0.8rem;">Send ${listing.totalUsdt.toFixed(2)} USDT to this escrow address:</p>
+                    <div class="static-value">${listing.escrowAddress}</div>
+                    <p style="color:#ffcccc; font-size:0.8rem;">Network: ${listing.network}</p>
+                    <button class="action-btn" id="confirmBuyBtn">Confirm Purchase</button>
+                    <button class="action-btn" style="background:#333; margin-top:0.5rem;" id="buyCloseBtn">Close</button>
+                </div>
+            `;
+            customModal.classList.add('active');
+            document.getElementById('confirmBuyBtn').addEventListener('click', async () => {
+                const name = document.getElementById('buyerName').value.trim();
+                const email = document.getElementById('buyerEmail').value.trim();
+                const wallet = document.getElementById('buyerWallet').value.trim();
+                if (!name || !email || !wallet) {
+                    alert('Please fill all fields.');
+                    return;
+                }
+                customModal.classList.remove('active');
+                await completePurchase(listingId, { name, email, wallet });
+            });
+            document.getElementById('buyCloseBtn').addEventListener('click', () => {
+                customModal.classList.remove('active');
+            });
+        }
+
+        async function completePurchase(listingId, buyerDetails) {
+            try {
+                const escrowQuery = await db.collection('escrow')
+                    .where('listingId', '==', listingId)
+                    .get();
+                if (escrowQuery.empty) throw new Error('Escrow record not found');
+                const escrowDocRef = escrowQuery.docs[0].ref;
+
+                await db.runTransaction(async (transaction) => {
+                    const listingRef = db.collection('listings').doc(listingId);
+                    const listingDoc = await transaction.get(listingRef);
+                    if (!listingDoc.exists) throw new Error('Listing not found');
+                    const listing = listingDoc.data();
+                    if (listing.status !== 'open') throw new Error('Listing no longer available');
+
+                    transaction.update(listingRef, {
+                        status: 'pending',
+                        buyerUid: currentUserId,
+                        buyerDetails: buyerDetails,
+                        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                    transaction.update(escrowDocRef, {
+                        status: 'pending',
+                        buyerUid: currentUserId,
+                        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                });
+                showModal('Purchase Initiated', 'Please send the USDT and then submit the transaction hash in "My Listings & Purchases".');
+                loadMarketplace();
+            } catch (e) {
+                showModal('Purchase failed', e.message);
+            }
+        }
+
+        async function cancelListing(listingId) {
+            if (!currentUserId) return;
+            try {
+                await db.runTransaction(async (transaction) => {
+                    const listingRef = db.collection('listings').doc(listingId);
+                    const listingDoc = await transaction.get(listingRef);
+                    if (!listingDoc.exists) throw new Error('Listing not found');
+                    const listing = listingDoc.data();
+                    if (listing.sellerUid !== currentUserId) throw new Error('Not your listing');
+                    if (listing.status !== 'pending_approval' && listing.status !== 'open') throw new Error('Cannot cancel at this stage');
+
+                    if (listing.status === 'pending_approval') {
+                        transaction.update(listingRef, { status: 'cancelled', updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
+                    } else if (listing.status === 'open') {
+                        const escrowQuery = await db.collection('escrow').where('listingId', '==', listingId).get();
+                        if (escrowQuery.empty) throw new Error('Escrow not found');
+                        const escrowDocRef = escrowQuery.docs[0].ref;
+                        const escrowDoc = escrowQuery.docs[0].data();
+
+                        const sellerRef = db.collection('users').doc(listing.sellerUid);
+                        const sellerDoc = await transaction.get(sellerRef);
+                        if (!sellerDoc.exists) throw new Error('Seller not found');
+                        const newBalance = (sellerDoc.data().balance || 0) + escrowDoc.amountFoot;
+
+                        transaction.update(listingRef, { status: 'cancelled', updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
+                        transaction.update(escrowDocRef, { status: 'refunded', updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
+                        transaction.set(sellerRef, { balance: newBalance }, { merge: true });
+                    }
+                });
+
+                const userDoc = await db.collection('users').doc(currentUserId).get();
+                setUserBalance(userDoc.data().balance || 0);
+                updateWalletDisplay();
+                showModal('Listing Cancelled', 'Your $FOOT has been returned (if it was locked).');
+                loadMarketplace();
+            } catch (e) {
+                showModal('Cancel failed', e.message);
+            }
+        }
+
+        async function submitTransactionHash(escrowId, hash) {
+            if (!currentUserId) return;
+            if (!hash) { showModal('Missing Hash', 'Please enter the transaction hash.'); return; }
+            try {
+                await db.collection('escrow').doc(escrowId).update({
+                    transactionHash: hash,
+                    status: 'awaiting_review',
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                showModal('Hash Submitted', 'Your payment is now awaiting admin verification.');
+                loadMarketplace();
+            } catch (e) {
+                showModal('Submission Failed', e.message);
+            }
+        }
+
+        async function loadMarketplace() {
+            if (!currentUserId) return;
+
+            const openListingsContainer = document.getElementById('openListingsContainer');
+            openListingsContainer.innerHTML = '<p style="color:#ff8888;">Loading…</p>';
+            try {
+                const openListingsSnap = await db.collection('listings')
+                    .where('status', '==', 'open')
+                    .get();
+                const openListings = [];
+                openListingsSnap.forEach(doc => openListings.push({ id: doc.id, ...doc.data() }));
+                openListings.sort((a,b) => (b.createdAt?.toMillis?.() || 0) - (a.createdAt?.toMillis?.() || 0));
+
+                openListingsContainer.innerHTML = '';
+                if (openListings.length === 0) {
+                    openListingsContainer.innerHTML = '<p style="color:#ffcccc;">No open listings.</p>';
+                } else {
+                    openListings.forEach(listing => {
+                        const div = document.createElement('div');
+                        div.className = 'listing-card';
+                        div.innerHTML = `
+                            <div class="listing-info">
+                                <div class="listing-amount">${listing.amountFoot} $FOOT</div>
+                                <div class="listing-price">Price: ${listing.pricePerFoot.toFixed(2)} USDT per $FOOT</div>
+                                <div class="listing-total">Total: ${listing.totalUsdt.toFixed(2)} USDT</div>
+                                <div style="font-size:0.8rem;color:#ffaaaa;">Seller: ${listing.sellerUid.substring(0,8)}…</div>
+                                <div style="font-size:0.8rem;color:#ffcccc;">Network: ${listing.network || ESCROW_NETWORK}</div>
+                            </div>
+                            <button class="buy-btn" data-id="${listing.id}">Buy</button>
+                        `;
+                        openListingsContainer.appendChild(div);
+                    });
+                }
+            } catch (e) {
+                console.error('Error loading open listings:', e);
+                openListingsContainer.innerHTML = '<p style="color:#ff8888;">Failed to load.</p>';
+            }
+
+            const myListingsContainer = document.getElementById('myListingsContainer');
+            myListingsContainer.innerHTML = '<p style="color:#ff8888;">Loading…</p>';
+            try {
+                const myListingsSnap = await db.collection('listings')
+                    .where('sellerUid', '==', currentUserId)
+                    .get();
+                const myPurchasesSnap = await db.collection('listings')
+                    .where('buyerUid', '==', currentUserId)
+                    .get();
+
+                const combined = [];
+                myListingsSnap.forEach(doc => combined.push({ id: doc.id, data: doc.data(), role: 'seller' }));
+                myPurchasesSnap.forEach(doc => combined.push({ id: doc.id, data: doc.data(), role: 'buyer' }));
+                combined.sort((a,b) => (b.data.createdAt?.toMillis?.() || 0) - (a.data.createdAt?.toMillis?.() || 0));
+
+                myListingsContainer.innerHTML = '';
+                if (combined.length === 0) {
+                    myListingsContainer.innerHTML = '<p style="color:#ffcccc;">No listings or purchases.</p>';
+                } else {
+                    combined.forEach(item => {
+                        const listing = item.data;
+                        const div = document.createElement('div');
+                        div.className = 'listing-card';
+                        let actionHTML = '';
+                        if (item.role === 'seller') {
+                            if (listing.status === 'pending_approval') {
+                                actionHTML = '<span class="pending-label">Pending approval</span>';
+                            } else if (listing.status === 'open') {
+                                actionHTML = `<button class="cancel-btn" data-id="${item.id}">Cancel</button>`;
+                            } else if (listing.status === 'pending') {
+                                actionHTML = '<span class="pending-label">Awaiting payment</span>';
+                            } else if (listing.status === 'completed') {
+                                actionHTML = '<span style="color:#00cc00;">Completed</span>';
+                            } else {
+                                actionHTML = listing.status;
+                            }
+                        } else if (item.role === 'buyer') {
+                            if (listing.status === 'pending') {
+                                actionHTML = `<button class="action-btn hash-btn" data-id="${item.id}">Submit Hash</button>`;
+                            } else {
+                                actionHTML = listing.status;
+                            }
+                        }
+                        div.innerHTML = `
+                            <div class="listing-info">
+                                <div class="listing-amount">${listing.amountFoot} $FOOT</div>
+                                <div class="listing-price">Price: ${listing.pricePerFoot.toFixed(2)} USDT</div>
+                                <div class="listing-total">Total: ${listing.totalUsdt.toFixed(2)} USDT</div>
+                                <div style="font-size:0.8rem;color:#ffaaaa;">Status: ${listing.status} ${item.role === 'seller' ? '(Selling)' : '(Buying)'}</div>
+                                ${listing.escrowAddress ? `<div style="font-size:0.8rem;color:#ffcccc;">Escrow Address (${listing.network || ESCROW_NETWORK}): ${listing.escrowAddress}</div>` : ''}
+                                ${listing.sellerExternalWallet && item.role === 'seller' ? `<div style="font-size:0.8rem;color:#ffcccc;">Your payout wallet: ${listing.sellerExternalWallet}</div>` : ''}
+                            </div>
+                            ${actionHTML}
+                        `;
+                        myListingsContainer.appendChild(div);
+                    });
+                }
+            } catch (e) {
+                console.error('Error loading my listings:', e);
+                myListingsContainer.innerHTML = '<p style="color:#ff8888;">Failed to load.</p>';
+            }
+
+            try {
+                const lockedSnap = await db.collection('escrow')
+                    .where('sellerUid', '==', currentUserId)
+                    .where('status', 'in', ['locked','pending'])
+                    .get();
+                let lockedTotal = 0;
+                lockedSnap.forEach(doc => lockedTotal += doc.data().amountFoot || 0);
+                document.getElementById('lockedAmount').innerText = lockedTotal.toFixed(2);
+            } catch (e) {
+                console.error('Error loading locked balance:', e);
+            }
+        }
+
+        function openHashModal(listingId) {
+            db.collection('escrow').where('listingId', '==', listingId).get().then(snap => {
+                if (!snap.empty) {
+                    const escrowId = snap.docs[0].id;
+                    customModalBox.innerHTML = `
+                        <h3 style="color:#ffaaaa;">Submit Transaction Hash</h3>
+                        <p style="color:#ffcccc;">Enter the USDT transaction hash from your wallet/exchange.</p>
+                        <input type="text" id="hashInput" placeholder="Transaction hash (TXID)" style="width:100%; padding:0.7rem; border-radius:30px; border:1px solid #ff5555; background:rgba(0,0,0,0.5); color:white; margin:0.8rem 0;">
+                        <button class="action-btn" id="submitHashBtn">Submit</button>
+                        <button class="action-btn" style="background:#333; margin-top:0.5rem;" id="hashCloseBtn">Close</button>
+                    `;
+                    customModal.classList.add('active');
+                    document.getElementById('submitHashBtn').addEventListener('click', () => {
+                        const hash = document.getElementById('hashInput').value.trim();
+                        customModal.classList.remove('active');
+                        submitTransactionHash(escrowId, hash);
+                    });
+                    document.getElementById('hashCloseBtn').addEventListener('click', () => {
+                        customModal.classList.remove('active');
+                    });
+                }
+            });
         }
 
         // ===================== INIT =====================
@@ -909,28 +1568,221 @@
                 document.getElementById('usernameDisplay').innerText = userData.username;
             }
 
-            // Ensure referralCode is saved immediately
             await saveUserToFirestore();
+            await loadTrainingStatus();
 
             updateMiningStats();
             updateCircularTimer();
             const lastRole = getStorage('last_active_role') || 'player';
             setUIRole(lastRole);
-            // No background save interval
 
             refreshReferralBadge();
             await attemptAutoReferral();
 
-            const summaries = ["Rental system","Train player","How you earn","Tournaments","League system","Knowledge challenge","Virtual Card","Football Academy","METAFOOT game"];
+            const summaries = [
+                { text: "Rental system" },
+                { text: "Train player" },
+                { text: "How you earn" },
+                { text: "Tournaments" },
+                { text: "League system" },
+                { text: "Knowledge challenge" },
+                { text: "Virtual Card" },
+                { text: "Football Academy" },
+                { text: "METAFOOT game" },
+                { text: "📲 Download the METAFOOT App", link: APK_DOWNLOAD_URL, linkText: "Get the APK" }
+            ];
             let slideSeq = [], currentSlide = 0, slideTimeout, countdownInterval;
             function buildSlides() {
-                slideSeq = summaries.map((s,i)=>({ text:`${i+1}. ${s}` }));
-                document.getElementById('slideshowWrapper').innerHTML = slideSeq.map(s => `<div class="slideshow-slide"><div class="slideshow-title">⚽ METAFOOT</div><div class="slideshow-text">${s.text}</div></div>`).join('');
+                slideSeq = summaries.map((s,i)=>({ text:`${i+1}. ${s.text}`, link: s.link, linkText: s.linkText }));
+                document.getElementById('slideshowWrapper').innerHTML = slideSeq.map(s => {
+                    let linkHTML = '';
+                    if (s.link) {
+                        linkHTML = `<a href="${s.link}" target="_blank" class="slideshow-link">${s.linkText || 'Open'}</a>`;
+                    }
+                    return `<div class="slideshow-slide"><div class="slideshow-title">⚽ METAFOOT</div><div class="slideshow-text">${s.text}</div>${linkHTML}</div>`;
+                }).join('');
                 document.getElementById('slideshowWrapper').style.transform = 'translateX(0%)';
             }
             function nextSlide() { currentSlide = (currentSlide+1) % slideSeq.length; document.getElementById('slideshowWrapper').style.transform = `translateX(-${currentSlide*100}%)`; resetTimer(); }
             function resetTimer() { clearTimeout(slideTimeout); clearInterval(countdownInterval); let t=40; document.getElementById('slideshowTimer').innerText = `Next slide in ${t}s`; countdownInterval = setInterval(()=>{ t--; if(t>=0) document.getElementById('slideshowTimer').innerText = `Next slide in ${t}s`; },1000); slideTimeout = setTimeout(()=>{ clearInterval(countdownInterval); nextSlide(); },40000); }
             buildSlides(); resetTimer();
+
+            document.getElementById('slideshowContainer').addEventListener('click', () => {
+                const slide = slideSeq[currentSlide];
+                if (slide.link) {
+                    window.open(slide.link, '_blank');
+                }
+            });
+
+            document.getElementById('navHome').addEventListener('click', () => showScreen('miningScreen'));
+            document.getElementById('navReferral').addEventListener('click', async () => { showScreen('referralScreen'); document.getElementById('refCodeDisplay').textContent = currentReferralCode; refreshReferralBadge(); await loadReferralStats(); });
+            document.getElementById('navTask').addEventListener('click', () => { showScreen('taskScreen'); renderTasks(); });
+            document.getElementById('navMarketplace').addEventListener('click', () => { showScreen('marketplaceScreen'); loadMarketplace(); });
+            document.getElementById('navWallet').addEventListener('click', () => { showScreen('walletScreen'); updateWalletDisplay(); renderWalletHistory(); });
+            document.getElementById('navEcosystem').addEventListener('click', () => showScreen('ecosystemScreen'));
+            document.querySelector('[data-action="profile"]').addEventListener('click', () => {
+                document.getElementById('sideMenu').classList.remove('open'); document.getElementById('menuOverlay').classList.remove('active');
+                document.getElementById('profileUserId').textContent = currentUserId;
+                document.getElementById('profileEmail').textContent = auth.currentUser.email;
+                document.getElementById('profileUsername').value = getStorage('profile_username') || '';
+                document.getElementById('profileBalance').innerText = getUserBalance().toLocaleString() + ' $FOOT';
+                showScreen('profileScreen');
+            });
+            document.querySelector('[data-action="airdropDashboard"]').addEventListener('click', async () => {
+                document.getElementById('sideMenu').classList.remove('open'); document.getElementById('menuOverlay').classList.remove('active');
+                showScreen('airdropDashboardScreen');
+                const doc = await db.collection('global').doc('stats').get();
+                const data = doc.exists ? doc.data() : { totalDistributed:0 };
+                const mined = data.totalDistributed || 0;
+                document.getElementById('dashboardMinedPremium').innerText = mined.toLocaleString();
+                document.getElementById('dashboardPercentPremium').innerText = `(${((mined/TOTAL_AIRDROP_CAP)*100).toFixed(2)}% distributed)`;
+            });
+            document.querySelector('[data-action="halving"]').addEventListener('click', () => {
+                document.getElementById('sideMenu').classList.remove('open'); document.getElementById('menuOverlay').classList.remove('active');
+                showScreen('halvingScreen');
+                const th = [0,15000,100000,500000,1000000], r = [4,2,1,0.5,0.25];
+                document.getElementById('halvingChartContainer').innerHTML = th.map((t,i) => `<div class="chart-row"><div class="chart-label">${t===0?'0':t>=1e6?'1M':(t/1000).toFixed(0)+'k'}</div><div class="chart-bar-container"><div class="chart-bar" style="width:${(r[i]/4)*100}%;"></div></div><div class="chart-value">${r[i]} $FOOT</div></div>`).join('');
+            });
+            document.getElementById('switchToPlayerBtn').addEventListener('click', () => setUIRole('player'));
+            document.getElementById('switchToManagerBtn').addEventListener('click', () => setUIRole('manager'));
+            document.getElementById('sendCoinBtn').addEventListener('click', openSendModal);
+            document.getElementById('receiveCoinBtn').addEventListener('click', openReceiveModal);
+            document.getElementById('createListingBtn').addEventListener('click', () => {
+                if (!trainingEligible) {
+                    showModal('Not Eligible', `You need to spend at least ${MIN_TRAINING_SPENT_FOR_SELLING} $FOOT on training to sell.`);
+                    return;
+                }
+                customModalBox.innerHTML = `
+                    <h3 style="color:#ffaaaa;">Sell $FOOT</h3>
+                    <p style="color:#ffcccc;">Fixed price: ${FOOT_PRICE_USDT} USDT per $FOOT</p>
+                    <label>Amount of $FOOT to sell</label>
+                    <input type="number" id="sellAmountInput" min="1" step="1" placeholder="Enter amount">
+                    <label>Your external USDT wallet (where we send your payment)</label>
+                    <input type="text" id="sellerWalletInput" placeholder="Paste your wallet address">
+                    <label>Network</label>
+                    <select id="sellerNetworkInput">
+                        <option value="Polygon">Polygon</option>
+                        <option value="TRC20">TRC20</option>
+                        <option value="ERC20">ERC20</option>
+                    </select>
+                    <p>Total you will receive: <span id="totalUsdtPreview">0.00</span> USDT</p>
+                    <button class="action-btn" id="confirmSellBtn">Submit for Approval</button>
+                    <button class="action-btn" style="background:#333; margin-top:0.5rem;" id="sellCloseBtn">Close</button>
+                `;
+                customModal.classList.add('active');
+                const amountInput = document.getElementById('sellAmountInput');
+                amountInput.addEventListener('input', () => {
+                    const amt = parseFloat(amountInput.value) || 0;
+                    document.getElementById('totalUsdtPreview').innerText = (amt * FOOT_PRICE_USDT).toFixed(2);
+                });
+                document.getElementById('confirmSellBtn').addEventListener('click', () => {
+                    const amount = parseFloat(amountInput.value);
+                    const wallet = document.getElementById('sellerWalletInput').value.trim();
+                    const network = document.getElementById('sellerNetworkInput').value;
+                    if (isNaN(amount) || amount <= 0 || !wallet) {
+                        showModal('Invalid', 'Enter amount and wallet address.');
+                        return;
+                    }
+                    customModal.classList.remove('active');
+                    createSellOrder(amount, wallet, network);
+                });
+                document.getElementById('sellCloseBtn').addEventListener('click', () => {
+                    customModal.classList.remove('active');
+                });
+            });
+
+            document.getElementById('saveProfileBtn').addEventListener('click', async () => {
+                const newUsername = document.getElementById('profileUsername').value.trim();
+                if (!newUsername || newUsername.length < 3 || newUsername.length > 20 || !/^[a-zA-Z0-9_]+$/.test(newUsername)) {
+                    showModal('Invalid username', 'Username must be 3-20 chars (letters, numbers, underscores only).');
+                    return;
+                }
+                const oldUsername = getStorage('profile_username');
+                if (newUsername !== oldUsername) {
+                    const changed = await changeUsername(newUsername);
+                    if (!changed) return;
+                }
+                saveUserToFirestore();
+                showModal('Saved', 'Profile updated.');
+            });
+            document.getElementById('revealProfileIdBtn').addEventListener('click', () => document.getElementById('profileUserId').classList.toggle('blurred'));
+            document.getElementById('copyProfileIdBtn').addEventListener('click', () => { navigator.clipboard.writeText(currentUserId); alert('User ID copied!'); });
+            document.getElementById('copyInviteLinkBtn').addEventListener('click', async () => {
+                const code = currentReferralCode || getStorage(REF_CODE_V2_KEY);
+                if (!code) { showModal('Error','No referral code found.'); return; }
+                const inviteUrl = `${window.location.origin}${window.location.pathname}?ref=${code}`;
+                const success = await copyToClipboard(inviteUrl);
+                showModal(success?'Copied':'Manual Copy', success?'Invite link copied to clipboard!':`Select and copy: <span style="font-family:monospace;">${inviteUrl}</span>`);
+            });
+            document.getElementById('menuBtn').addEventListener('click', () => {
+                document.getElementById('sideMenu').classList.toggle('open');
+                document.getElementById('menuOverlay').classList.toggle('active');
+            });
+            document.getElementById('menuOverlay').addEventListener('click', () => {
+                document.getElementById('sideMenu').classList.remove('open');
+                document.getElementById('menuOverlay').classList.remove('active');
+            });
+
+            // Event delegation for listing buttons
+            document.getElementById('openListingsContainer').addEventListener('click', (e) => {
+                const buyBtn = e.target.closest('.buy-btn');
+                if (buyBtn) {
+                    buyListing(buyBtn.dataset.id);
+                }
+            });
+            document.getElementById('myListingsContainer').addEventListener('click', (e) => {
+                const cancelBtn = e.target.closest('.cancel-btn');
+                if (cancelBtn) {
+                    cancelListing(cancelBtn.dataset.id);
+                }
+                const hashBtn = e.target.closest('.hash-btn');
+                if (hashBtn) {
+                    openHashModal(hashBtn.dataset.id);
+                }
+            });
+
+            // Stadium card click listener
+            document.getElementById('stadiumCard').addEventListener('click', async () => {
+                const globalDoc = await db.collection('global').doc('stats').get();
+                const data = globalDoc.exists ? globalDoc.data() : { stadiumsSold:0 };
+                const remaining = STADIUM_TOTAL_SUPPLY - (data.stadiumsSold || 0);
+                const balance = getUserBalance();
+                const html = `
+                    <div style="text-align:center;">
+                        <div style="font-size:3rem;">🏟️</div>
+                        <h3 style="color:#ffd700;">METAFOOT Stadium</h3>
+                        <p class="stadium-desc">Limited Edition · Only ${STADIUM_TOTAL_SUPPLY.toLocaleString()} available</p>
+                        <div class="stadium-price">2,000 $FOOT</div>
+                        <div class="stadium-supply-bar"><div class="stadium-supply-fill" style="width:${((data.stadiumsSold||0)/STADIUM_TOTAL_SUPPLY)*100}%;"></div></div>
+                        <p style="color:#ffcccc;">${data.stadiumsSold||0} / ${STADIUM_TOTAL_SUPPLY.toLocaleString()} sold · ${remaining.toLocaleString()} left</p>
+                        <button class="action-btn" id="stadiumBuyBtn" ${remaining<=0||balance<2000?'disabled':''}>${remaining<=0?'Sold Out':balance<2000?'Insufficient $FOOT':'Buy Now for 2,000 $FOOT'}</button>
+                    </div>
+                `;
+                customModalBox.innerHTML = html + '<button class="action-btn" style="margin-top:1rem;background:transparent;border:1px solid #ff5555;color:#ffaaaa;" onclick="document.getElementById(\'customModalOverlay\').classList.remove(\'active\')">Close</button>';
+                customModal.classList.add('active');
+                if (remaining>0 && balance>=2000) {
+                    document.getElementById('stadiumBuyBtn').addEventListener('click', async () => { await buyStadiumFirestore(); customModal.classList.remove('active'); });
+                }
+            });
+
+            // Vision card
+            document.getElementById('visionCard').addEventListener('click', () => {
+                showModal('The METAFOOT Ecosystem', `
+                    <div style="text-align:left; max-height:60vh; overflow-y:auto; padding:0 0.5rem;">
+                        <h2 style="color:#ffaaaa; text-align:center;">🚀 What METAFOOT is building</h2>
+                        <p style="margin-bottom:1rem;">A football universe where everyone can earn.</p>
+                        <div class="section"><strong>🏠 Rental System</strong><br>Own a team? Rent it out for a fee. Earn passive income while others compete.</div>
+                        <div class="section"><strong>🧠 Train Player</strong><br>Every training session increases your player's value. Managers will compete to sign the best.</div>
+                        <div class="section"><strong>💰 Fair Earnings</strong><br>70% of tournament prizes go to the players, 30% to the manager. All enforced by smart contracts.</div>
+                        <div class="section"><strong>🏆 Tournaments</strong><br>Weekly leagues: $FOOT Survival, Mission, Classic, and Elite. Climb the ladder for huge prizes.</div>
+                        <div class="section"><strong>🎮 PvP Arena</strong><br>Challenge any manager in real‑time. Wager $FOOT and let your trained attributes decide the winner.</div>
+                        <div class="section"><strong>💳 $FOOT Virtual Card</strong><br>Spend your mined $FOOT anywhere. First online, then in METAFOOT physical shops.</div>
+                        <div class="section"><strong>🧠 Knowledge Challenge</strong><br>Earn extra $FOOT by answering quiz questions about the leagues you follow.</div>
+                        <div class="section"><strong>⚽ Football Academy</strong><br>Real‑world talent discovery. Part of the revenue flows back into the ecosystem.</div>
+                        <div class="section"><strong>🎯 The Game</strong><br>METAFOOT manager game – first on mobile (Unity), later on PC. You're a founding member.</div>
+                    </div>
+                `);
+            });
         }
 
         async function attemptAutoReferral() {
@@ -950,112 +1802,7 @@
             }
         }
 
-        // ===================== EVENT LISTENERS =====================
-        document.getElementById('claimCircleBtn').addEventListener('click', claimRewardFirestore);
-
-        document.getElementById('visionCard').addEventListener('click', () => {
-            showModal('The METAFOOT Ecosystem', `
-                <div style="text-align:left; max-height:60vh; overflow-y:auto; padding:0 0.5rem;">
-                    <h2 style="color:#ffaaaa; text-align:center;">🚀 What METAFOOT is building</h2>
-                    <p style="margin-bottom:1rem;">A football universe where everyone can earn.</p>
-                    <div class="section"><strong>🏠 Rental System</strong><br>Own a team? Rent it out for a fee. Earn passive income while others compete.</div>
-                    <div class="section"><strong>🧠 Train Player</strong><br>Every training session increases your player's value. Managers will compete to sign the best.</div>
-                    <div class="section"><strong>💰 Fair Earnings</strong><br>70% of tournament prizes go to the players, 30% to the manager. All enforced by smart contracts.</div>
-                    <div class="section"><strong>🏆 Tournaments</strong><br>Weekly leagues: $FOOT Survival, Mission, Classic, and Elite. Climb the ladder for huge prizes.</div>
-                    <div class="section"><strong>🎮 PvP Arena</strong><br>Challenge any manager in real‑time. Wager $FOOT and let your trained attributes decide the winner.</div>
-                    <div class="section"><strong>💳 $FOOT Virtual Card</strong><br>Spend your mined $FOOT anywhere. First online, then in METAFOOT physical shops.</div>
-                    <div class="section"><strong>🧠 Knowledge Challenge</strong><br>Earn extra $FOOT by answering quiz questions about the leagues you follow.</div>
-                    <div class="section"><strong>⚽ Football Academy</strong><br>Real‑world talent discovery. Part of the revenue flows back into the ecosystem.</div>
-                    <div class="section"><strong>🎯 The Game</strong><br>METAFOOT manager game – first on mobile (Unity), later on PC. You're a founding member.</div>
-                </div>
-            `);
-        });
-
-        document.getElementById('stadiumCard').addEventListener('click', async () => {
-            const globalDoc = await db.collection('global').doc('stats').get();
-            const data = globalDoc.exists ? globalDoc.data() : { stadiumsSold:0 };
-            const remaining = 1000 - (data.stadiumsSold || 0);
-            const balance = getUserBalance();
-            const html = `
-                <div style="text-align:center;">
-                    <div style="font-size:3rem;">🏟️</div>
-                    <h3 style="color:#ffd700;">METAFOOT Stadium</h3>
-                    <p class="stadium-desc">Limited Edition · Only 1,000 available</p>
-                    <div class="stadium-price">2,000 $FOOT</div>
-                    <div class="stadium-supply-bar"><div class="stadium-supply-fill" style="width:${((data.stadiumsSold||0)/1000)*100}%;"></div></div>
-                    <p style="color:#ffcccc;">${data.stadiumsSold||0} / 1000 sold · ${remaining} left</p>
-                    <button class="action-btn" id="stadiumBuyBtn" ${remaining<=0||balance<2000?'disabled':''}>${remaining<=0?'Sold Out':balance<2000?'Insufficient $FOOT':'Buy Now for 2,000 $FOOT'}</button>
-                </div>
-            `;
-            customModalBox.innerHTML = html + '<button class="action-btn" style="margin-top:1rem;background:transparent;border:1px solid #ff5555;color:#ffaaaa;" onclick="document.getElementById(\'customModalOverlay\').classList.remove(\'active\')">Close</button>';
-            customModal.classList.add('active');
-            if (remaining>0 && balance>=2000) {
-                document.getElementById('stadiumBuyBtn').addEventListener('click', async () => { await buyStadiumFirestore(); customModal.classList.remove('active'); });
-            }
-        });
-
-        // Navigation
-        document.getElementById('menuBtn').addEventListener('click', ()=>{ document.getElementById('sideMenu').classList.toggle('open'); document.getElementById('menuOverlay').classList.toggle('active'); });
-        document.getElementById('menuOverlay').addEventListener('click', ()=>{ document.getElementById('sideMenu').classList.remove('open'); document.getElementById('menuOverlay').classList.remove('active'); });
-        document.getElementById('navHome').addEventListener('click', ()=> { if (!document.getElementById('miningScreen').classList.contains('hidden')) return; showScreen('miningScreen'); });
-        document.getElementById('navReferral').addEventListener('click', async ()=> { showScreen('referralScreen'); document.getElementById('refCodeDisplay').textContent = currentReferralCode; refreshReferralBadge(); await loadReferralStats(); });
-        document.getElementById('navTask').addEventListener('click', ()=> { showScreen('taskScreen'); renderTasks(); });
-        document.getElementById('navEcosystem').addEventListener('click', ()=> showScreen('ecosystemScreen'));
-        document.getElementById('backFromTrainingBtn').addEventListener('click', ()=> showScreen('miningScreen'));
-        document.querySelector('[data-action="profile"]').addEventListener('click', ()=> {
-            document.getElementById('sideMenu').classList.remove('open'); document.getElementById('menuOverlay').classList.remove('active');
-            document.getElementById('profileUserId').textContent = currentUserId;
-            document.getElementById('profileEmail').textContent = auth.currentUser.email;
-            document.getElementById('profileUsername').value = getStorage('profile_username') || '';
-            document.getElementById('profileBalance').innerText = getUserBalance().toLocaleString() + ' $FOOT';
-            showScreen('profileScreen');
-        });
-        document.querySelector('[data-action="airdropDashboard"]').addEventListener('click', async ()=> {
-            document.getElementById('sideMenu').classList.remove('open'); document.getElementById('menuOverlay').classList.remove('active');
-            showScreen('airdropDashboardScreen');
-            const doc = await db.collection('global').doc('stats').get();
-            const data = doc.exists ? doc.data() : { totalDistributed:0 };
-            const mined = data.totalDistributed || 0;
-            document.getElementById('dashboardMinedPremium').innerText = mined.toLocaleString();
-            document.getElementById('dashboardPercentPremium').innerText = `(${((mined/TOTAL_AIRDROP_CAP)*100).toFixed(2)}% distributed)`;
-        });
-        document.querySelector('[data-action="halving"]').addEventListener('click', ()=> {
-            document.getElementById('sideMenu').classList.remove('open'); document.getElementById('menuOverlay').classList.remove('active');
-            showScreen('halvingScreen');
-            const th = [0,15000,100000,500000,1000000], r = [4,2,1,0.5,0.25];
-            document.getElementById('halvingChartContainer').innerHTML = th.map((t,i) => `<div class="chart-row"><div class="chart-label">${t===0?'0':t>=1e6?'1M':(t/1000).toFixed(0)+'k'}</div><div class="chart-bar-container"><div class="chart-bar" style="width:${(r[i]/4)*100}%;"></div></div><div class="chart-value">${r[i]} $FOOT</div></div>`).join('');
-        });
-        document.getElementById('switchToPlayerBtn').addEventListener('click', ()=> setUIRole('player'));
-        document.getElementById('switchToManagerBtn').addEventListener('click', ()=> setUIRole('manager'));
-
-        // Profile save
-        document.getElementById('saveProfileBtn').addEventListener('click', async () => {
-            const newUsername = document.getElementById('profileUsername').value.trim();
-            if (!newUsername || newUsername.length < 3 || newUsername.length > 20 || !/^[a-zA-Z0-9_]+$/.test(newUsername)) {
-                showModal('Invalid username', 'Username must be 3-20 chars (letters, numbers, underscores only).');
-                return;
-            }
-            const oldUsername = getStorage('profile_username');
-            if (newUsername !== oldUsername) {
-                const changed = await changeUsername(newUsername);
-                if (!changed) return;
-            }
-            saveUserToFirestore();
-            showModal('Saved', 'Profile updated.');
-        });
-        document.getElementById('revealProfileIdBtn').addEventListener('click', ()=> document.getElementById('profileUserId').classList.toggle('blurred'));
-        document.getElementById('copyProfileIdBtn').addEventListener('click', ()=> { navigator.clipboard.writeText(currentUserId); alert('User ID copied!'); });
-
-        // Copy Invite Link
-        document.getElementById('copyInviteLinkBtn').addEventListener('click', async ()=>{
-            const code = currentReferralCode || getStorage(REF_CODE_V2_KEY);
-            if (!code) { showModal('Error','No referral code found.'); return; }
-            const inviteUrl = `${window.location.origin}${window.location.pathname}?ref=${code}`;
-            const success = await copyToClipboard(inviteUrl);
-            showModal(success?'Copied':'Manual Copy', success?'Invite link copied to clipboard!':`Select and copy: <span style="font-family:monospace;">${inviteUrl}</span>`);
-        });
-
-        // ===================== ANNOUNCEMENT TASKS =====================
+        // Tasks and announcements functions (unchanged)
         async function renderAnnouncementTasks() {
             const container = document.getElementById('announcementTasksContainer');
             if (!container) return;
@@ -1194,40 +1941,6 @@
                 }
             }, 600);
         }
-
-        // Boost (ad)
-        let adSecondsLeft = 10, adReady = false, adTimer = null;
-        function startAdCountdown() {
-            adSecondsLeft = 10; adReady = false;
-            document.getElementById('adClaimBtn').disabled = true;
-            document.getElementById('adClaimBtn').innerText = '⏳ Please wait...';
-            document.getElementById('adCountdownText').innerText = adSecondsLeft;
-            document.getElementById('adProgressBar').style.width = '100%';
-            document.getElementById('adModalOverlay').classList.add('active');
-            adTimer = setInterval(() => {
-                adSecondsLeft--;
-                document.getElementById('adCountdownText').innerText = adSecondsLeft;
-                document.getElementById('adProgressBar').style.width = (adSecondsLeft/10*100)+'%';
-                if (adSecondsLeft <= 0) {
-                    clearInterval(adTimer); adReady = true;
-                    document.getElementById('adClaimBtn').disabled = false;
-                    document.getElementById('adClaimBtn').innerText = '🎉 Claim 0.5 $FOOT';
-                    document.getElementById('adCountdownText').innerText = '0';
-                    document.getElementById('adProgressBar').style.width = '0%';
-                }
-            }, 1000);
-        }
-        document.getElementById('adClaimBtn').addEventListener('click', ()=> {
-            if (!adReady) return;
-            addToUserBalance(0.5);
-            db.collection('global').doc('stats').update({ totalDistributed: firebase.firestore.FieldValue.increment(0.5) });
-            updateMiningStats(); saveUserToFirestore();
-            document.getElementById('adModalOverlay').classList.remove('active');
-            confetti({ particleCount:80, spread:60, origin:{y:0.7}, colors:['#228B22','#00ff00'] });
-            showModal('Boost claimed', '🎉 You earned 0.5 $FOOT!');
-        });
-        document.getElementById('adCloseBtn').addEventListener('click', ()=> { document.getElementById('adModalOverlay').classList.remove('active'); clearInterval(adTimer); });
-        document.getElementById('boostBtn').addEventListener('click', ()=> { if (!document.getElementById('boostBtn').disabled) startAdCountdown(); });
     });
 </script>
 </body>
