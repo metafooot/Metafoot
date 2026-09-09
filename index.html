@@ -218,6 +218,16 @@
         .cancel-btn { background:#990000; border:none; padding:0.3rem 0.8rem; border-radius:30px; color:white; cursor:pointer; font-size:0.8rem; }
         .pending-label { color:#ff8888; font-style:italic; }
         .locked-balance { background:rgba(0,0,0,0.5); border-radius:20px; padding:0.4rem 1rem; border:1px solid #ff5555; color:#ffaaaa; font-size:0.85rem; display:inline-block; }
+        /* Copy button for address */
+        .copy-address-btn {
+            background: transparent;
+            border: none;
+            color: #ffaaaa;
+            cursor: pointer;
+            font-size: 1.2rem;
+            margin-left: 0.5rem;
+            vertical-align: middle;
+        }
     </style>
 </head>
 <body>
@@ -315,7 +325,6 @@
             <div id="actionButtonsContainer" class="action-buttons">
                 <button class="action-btn" id="trainBtn"><i class="fas fa-dumbbell"></i> Train Player</button>
             </div>
-            <!-- Boost button removed -->
             <div style="margin:1rem auto; max-width:480px;">
                 <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-3940256099942544" data-ad-slot="6303424663" data-ad-format="auto" data-full-width-responsive="true"></ins>
                 <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
@@ -490,6 +499,7 @@
     const firebaseConfig = {
         apiKey: "AIzaSyDsu_zlNzi_qC-psSKaiQjci6OxIra3h-k",
         authDomain: "metafoot-4c82b.firebaseapp.com",
+        databaseURL: "https://metafoot-4c82b-default-rtdb.europe-west1.firebasedatabase.app",
         projectId: "metafoot-4c82b",
         storageBucket: "metafoot-4c82b.firebasestorage.app",
         messagingSenderId: "358989878882",
@@ -504,7 +514,7 @@
     const FOOT_PRICE_USDT = 0.02;
     const ESCROW_ADDRESS = '0x7126590d91d980ccd796fef44d432def98b81a63'; // Polygon
     const ESCROW_NETWORK = 'Polygon (USDT)';
-    const MIN_TRAINING_SPENT_FOR_SELLING = 800;  // NEW
+    const MIN_TRAINING_SPENT_FOR_SELLING = 800;
     const STADIUM_TOTAL_SUPPLY = 5000;
 
     // ===================== GLOBALS =====================
@@ -750,7 +760,7 @@
                     for (const attr of attributes) merged[attr] = Math.max(parsedLocal[attr] || 0, data.attributes[attr] || 0);
                     setStorage('player_training_attrs', JSON.stringify(merged));
                     playerAttrs = merged;
-                    calculateEligibility();  // Recompute based on spent
+                    calculateEligibility();
                 } else {
                     playerAttrs = {};
                     calculateEligibility();
@@ -1304,13 +1314,26 @@
                     <label>Your External Wallet (for refunds)</label>
                     <input type="text" id="buyerWallet" placeholder="Your USDT wallet address">
                     <p style="color:#ffcccc; font-size:0.8rem;">Send ${listing.totalUsdt.toFixed(2)} USDT to this escrow address:</p>
-                    <div class="static-value">${listing.escrowAddress}</div>
+                    <div class="static-value">
+                        <span id="escrowAddressText">${listing.escrowAddress}</span>
+                        <button class="copy-address-btn" id="copyAddressBtn" title="Copy address"><i class="fas fa-copy"></i></button>
+                    </div>
                     <p style="color:#ffcccc; font-size:0.8rem;">Network: ${listing.network}</p>
                     <button class="action-btn" id="confirmBuyBtn">Confirm Purchase</button>
                     <button class="action-btn" style="background:#333; margin-top:0.5rem;" id="buyCloseBtn">Close</button>
                 </div>
             `;
             customModal.classList.add('active');
+            document.getElementById('copyAddressBtn').addEventListener('click', () => {
+                const address = document.getElementById('escrowAddressText').textContent.trim();
+                copyToClipboard(address).then(success => {
+                    if (success) {
+                        showModal('Copied', 'Address copied to clipboard.');
+                    } else {
+                        alert('Copy failed. Please copy manually.');
+                    }
+                });
+            });
             document.getElementById('confirmBuyBtn').addEventListener('click', async () => {
                 const name = document.getElementById('buyerName').value.trim();
                 const email = document.getElementById('buyerEmail').value.trim();
@@ -1741,7 +1764,7 @@
                 }
             });
 
-            // Stadium card click listener
+            // Stadium card
             document.getElementById('stadiumCard').addEventListener('click', async () => {
                 const globalDoc = await db.collection('global').doc('stats').get();
                 const data = globalDoc.exists ? globalDoc.data() : { stadiumsSold:0 };
