@@ -218,7 +218,7 @@
         .cancel-btn { background:#990000; border:none; padding:0.3rem 0.8rem; border-radius:30px; color:white; cursor:pointer; font-size:0.8rem; }
         .pending-label { color:#ff8888; font-style:italic; }
         .locked-balance { background:rgba(0,0,0,0.5); border-radius:20px; padding:0.4rem 1rem; border:1px solid #ff5555; color:#ffaaaa; font-size:0.85rem; display:inline-block; }
-        /* Copy button for address */
+        /* Copy button */
         .copy-address-btn {
             background: transparent;
             border: none;
@@ -1251,7 +1251,7 @@
             }
         }
 
-        async function createSellOrder(amountFoot, sellerExternalWallet, sellerNetwork) {
+        async function createSellOrder(amountFoot, sellerExternalWallet) {
             if (!currentUserId) return;
             if (!trainingEligible) {
                 showModal('Not Eligible', `You need to spend at least ${MIN_TRAINING_SPENT_FOR_SELLING} $FOOT on training to sell.`);
@@ -1273,7 +1273,7 @@
                     pricePerFoot: escrowSettings.footPriceUsdt,
                     totalUsdt: totalUsdt,
                     escrowAddress: escrowSettings.escrowAddress || ESCROW_ADDRESS,
-                    network: sellerNetwork || escrowSettings.network || ESCROW_NETWORK,
+                    network: 'Polygon', // fixed
                     sellerExternalWallet: sellerExternalWallet,
                     status: 'pending_approval',
                     buyerUid: null,
@@ -1305,20 +1305,20 @@
         function openBuyerDetailsModal(listingId, listing) {
             customModalBox.innerHTML = `
                 <h3 style="color:#ffaaaa;">Buy ${listing.amountFoot} $FOOT</h3>
-                <p style="color:#ffcccc;">Total cost: ${listing.totalUsdt.toFixed(2)} USDT (${listing.network})</p>
+                <p style="color:#ffcccc;">Total cost: ${listing.totalUsdt.toFixed(2)} USDT (Polygon)</p>
                 <div class="send-form">
                     <label>Your Name</label>
                     <input type="text" id="buyerName" placeholder="Full name">
                     <label>Your Email</label>
                     <input type="email" id="buyerEmail" placeholder="Email address">
-                    <label>Your External Wallet (for refunds)</label>
+                    <label>Your Polygon (USDT) wallet address (for refunds)</label>
                     <input type="text" id="buyerWallet" placeholder="Your USDT wallet address">
                     <p style="color:#ffcccc; font-size:0.8rem;">Send ${listing.totalUsdt.toFixed(2)} USDT to this escrow address:</p>
                     <div class="static-value">
                         <span id="escrowAddressText">${listing.escrowAddress}</span>
                         <button class="copy-address-btn" id="copyAddressBtn" title="Copy address"><i class="fas fa-copy"></i></button>
                     </div>
-                    <p style="color:#ffcccc; font-size:0.8rem;">Network: ${listing.network}</p>
+                    <p style="color:#ffcccc; font-size:0.8rem;">Network: Polygon</p>
                     <button class="action-btn" id="confirmBuyBtn">Confirm Purchase</button>
                     <button class="action-btn" style="background:#333; margin-top:0.5rem;" id="buyCloseBtn">Close</button>
                 </div>
@@ -1680,14 +1680,8 @@
                     <p style="color:#ffcccc;">Fixed price: ${FOOT_PRICE_USDT} USDT per $FOOT</p>
                     <label>Amount of $FOOT to sell</label>
                     <input type="number" id="sellAmountInput" min="1" step="1" placeholder="Enter amount">
-                    <label>Your external USDT wallet (where we send your payment)</label>
+                    <label>Your Polygon (USDT) wallet address – must be on Polygon network</label>
                     <input type="text" id="sellerWalletInput" placeholder="Paste your wallet address">
-                    <label>Network</label>
-                    <select id="sellerNetworkInput">
-                        <option value="Polygon">Polygon</option>
-                        <option value="TRC20">TRC20</option>
-                        <option value="ERC20">ERC20</option>
-                    </select>
                     <p>Total you will receive: <span id="totalUsdtPreview">0.00</span> USDT</p>
                     <button class="action-btn" id="confirmSellBtn">Submit for Approval</button>
                     <button class="action-btn" style="background:#333; margin-top:0.5rem;" id="sellCloseBtn">Close</button>
@@ -1701,13 +1695,12 @@
                 document.getElementById('confirmSellBtn').addEventListener('click', () => {
                     const amount = parseFloat(amountInput.value);
                     const wallet = document.getElementById('sellerWalletInput').value.trim();
-                    const network = document.getElementById('sellerNetworkInput').value;
                     if (isNaN(amount) || amount <= 0 || !wallet) {
                         showModal('Invalid', 'Enter amount and wallet address.');
                         return;
                     }
                     customModal.classList.remove('active');
-                    createSellOrder(amount, wallet, network);
+                    createSellOrder(amount, wallet);
                 });
                 document.getElementById('sellCloseBtn').addEventListener('click', () => {
                     customModal.classList.remove('active');
