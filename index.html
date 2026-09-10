@@ -20,17 +20,15 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1"></script>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3940256099942544" crossorigin="anonymous"></script>
-    <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-auth-compat.js"></script>
     <style>
-        /* ========== GLOBAL ========== */
         * { margin:0; padding:0; box-sizing:border-box; user-select:none; }
         body { font-family:'Inter',sans-serif; background:radial-gradient(circle at 20% 30%,#0a0a0a,#000000); min-height:100vh; display:flex; align-items:center; justify-content:center; }
         .screen { position:fixed; top:0; left:0; width:100%; height:100%; overflow-y:auto; padding:1.5rem; display:flex; flex-direction:column; align-items:center; justify-content:flex-start; transition:opacity 0.4s; }
         .screen.hidden { opacity:0; pointer-events:none; visibility:hidden; }
-        .copyable-text { user-select:text !important; -webkit-user-select:text !important; -moz-user-select:text !important; -ms-user-select:text !important; }
+        .copyable-text { user-select:text !important; -webkit-user-select:text !important; }
         #authScreen { justify-content:center; background:radial-gradient(circle at 20% 30%,#0f0f1a,#000000); }
         .auth-card { background:rgba(5,10,22,0.95); border-radius:2.5rem; padding:2rem 1.8rem; max-width:480px; width:90%; border:2px solid #ff5555; box-shadow:0 0 30px #ff333380; backdrop-filter:blur(8px); color:#ffcccc; }
         .auth-logo { font-size:3rem; margin-bottom:0.3rem; color:#ff5555; filter:drop-shadow(0 0 8px #ff3333); text-align:center; }
@@ -39,39 +37,24 @@
         .auth-form { display:flex; flex-direction:column; gap:1rem; }
         .auth-input-group { display:flex; align-items:center; background:rgba(0,0,0,0.5); border-radius:60px; padding:0.2rem 1rem; border:1px solid #ff5555; margin-bottom:0.5rem; }
         .auth-input-group i { color:#ff8888; width:24px; }
-        .auth-input-group input,.auth-input-group textarea { width:100%; background:transparent; border:none; padding:0.8rem 0.5rem; color:white; font-size:1rem; outline:none; resize:none; }
-        .auth-btn { background:linear-gradient(95deg,#ff3333,#990000); border:none; padding:0.9rem; border-radius:60px; font-weight:bold; color:white; font-size:1rem; cursor:pointer; transition:0.2s; margin-top:0.5rem; width:100%; }
-        .auth-btn.secondary { background:transparent; border:1px solid #ff5555; color:#ffaaaa; }
+        .auth-input-group input { width:100%; background:transparent; border:none; padding:0.8rem 0.5rem; color:white; font-size:1rem; outline:none; }
+        .auth-btn { background:linear-gradient(95deg,#ff3333,#990000); border:none; padding:0.9rem; border-radius:60px; font-weight:bold; color:white; font-size:1rem; cursor:pointer; width:100%; }
         .auth-btn:hover { background:#ff5555; transform:scale(1.01); }
         .auth-links { display:flex; justify-content:space-between; margin-top:1rem; font-size:0.8rem; }
         .auth-link { color:#ffaaaa; cursor:pointer; text-decoration:underline; }
         .error-message { color:#ff8888; font-size:0.8rem; text-align:center; min-height:20px; margin-top:0.5rem; }
         .top-bar { position:fixed; top:0; left:0; width:100%; z-index:100; background:#0a0a0f; border-bottom:2px solid #ff5555; box-shadow:0 4px 12px rgba(255,85,85,0.45); display:flex; flex-direction:column; pointer-events:none; }
-        .header-title-row { width:100%; padding:0.6rem 1rem 0.2rem; display:flex; justify-content:center; align-items:center; pointer-events:none; gap:0.4rem; }
-        .app-title { font-size:2rem; font-weight:800; background:linear-gradient(135deg,#ffffff,#ff8888); -webkit-background-clip:text; background-clip:text; color:transparent; letter-spacing:-0.5px; }
-        .ambassador-badge { display:inline-flex; align-items:center; justify-content:center; width:26px; height:26px; border-radius:50%; font-size:0.9rem; background:rgba(0,0,0,0.7); border:1px solid; box-shadow:0 0 8px; pointer-events:none; }
-        .ambassador-badge.lite { color:#ffffff; border-color:#ffffff; box-shadow-color:#ffffff; }
-        .ambassador-badge.bronze { color:#cd7f32; border-color:#cd7f32; box-shadow-color:#cd7f32; }
-        .ambassador-badge.silver { color:#c0c0c0; border-color:#c0c0c0; box-shadow-color:#c0c0c0; }
-        .ambassador-badge.gold { color:#ffd700; border-color:#ffd700; box-shadow-color:#ffd700; }
-        .ambassador-badge.team { color:#e5e4e2; border-color:#e5e4e2; box-shadow-color:#e5e4e2; }
+        .header-title-row { width:100%; padding:0.6rem 1rem 0.2rem; display:flex; justify-content:center; align-items:center; gap:0.4rem; }
+        .app-title { font-size:2rem; font-weight:800; background:linear-gradient(135deg,#ffffff,#ff8888); -webkit-background-clip:text; background-clip:text; color:transparent; }
+        .ambassador-badge { display:inline-flex; align-items:center; justify-content:center; width:26px; height:26px; border-radius:50%; font-size:0.9rem; background:rgba(0,0,0,0.7); border:1px solid; }
+        .ambassador-badge.lite { color:#fff; border-color:#fff; }
+        .ambassador-badge.bronze { color:#cd7f32; border-color:#cd7f32; }
+        .ambassador-badge.silver { color:#c0c0c0; border-color:#c0c0c0; }
+        .ambassador-badge.gold { color:#ffd700; border-color:#ffd700; }
+        .ambassador-badge.team { color:#e5e4e2; border-color:#e5e4e2; }
         .header-controls-row { width:100%; padding:0.2rem 1rem 0.6rem; display:flex; justify-content:space-between; align-items:center; pointer-events:auto; }
-        .left-controls { display:flex; align-items:center; gap:0.6rem; }
-        .right-controls { display:flex; align-items:center; gap:0.6rem; }
-        .menu-btn {
-            background:#ff3333 !important;
-            border-radius:50px;
-            padding:0.6rem 0.8rem;
-            border:2px solid #ff8888;
-            color:white;
-            font-size:1.4rem;
-            cursor:pointer;
-            position:relative;
-            z-index:101;
-            box-shadow:0 0 10px rgba(255,50,50,0.6);
-            min-width:44px;
-            text-align:center;
-        }
+        .left-controls, .right-controls { display:flex; align-items:center; gap:0.6rem; }
+        .menu-btn { background:#ff3333 !important; border-radius:50px; padding:0.6rem 0.8rem; border:2px solid #ff8888; color:white; font-size:1.4rem; cursor:pointer; min-width:44px; text-align:center; }
         .wallet-display { background:rgba(0,0,0,0.7); border-radius:40px; padding:0.4rem 0.8rem; border:1px solid #ff5555; color:#ffcccc; font-size:0.85rem; font-weight:bold; display:flex; align-items:center; gap:0.4rem; }
         .username-display { background:rgba(0,0,0,0.6); border-radius:40px; padding:0.4rem 0.8rem; border:1px solid #ff5555; color:#ffaaaa; font-size:0.85rem; font-weight:bold; }
         .screen { padding-top:102px; padding-bottom:80px; }
@@ -82,9 +65,9 @@
         .menu-item { background:rgba(30,30,50,0.8); border:1px solid #ff5555; border-radius:40px; padding:0.8rem 1rem; color:#ffcccc; font-weight:600; cursor:pointer; text-align:center; }
         .menu-item:hover { background:rgba(60,60,80,0.8); }
         .chart-row { display:flex; align-items:center; gap:8px; margin-bottom:12px; font-size:12px; }
-        .chart-label { width:70px; text-align:left; color:#ffcccc; }
+        .chart-label { width:70px; color:#ffcccc; }
         .chart-bar-container { flex:1; background:#1a1a2a; border-radius:12px; overflow:hidden; height:28px; }
-        .chart-bar { height:100%; background:linear-gradient(90deg,#ff5555,#ff0000); width:0%; border-radius:12px; transition:width 0.3s ease; }
+        .chart-bar { height:100%; background:linear-gradient(90deg,#ff5555,#ff0000); width:0%; border-radius:12px; }
         .chart-value { width:60px; text-align:right; color:#ff8888; font-weight:bold; }
         .halving-note { font-size:0.7rem; text-align:center; margin-top:1rem; color:#ffaaaa; }
         @keyframes sparkleGlowRed { 0%{box-shadow:0 0 5px #ff4444;} 50%{box-shadow:0 0 14px #ff2a2a;} 100%{box-shadow:0 0 8px #ff5555;} }
@@ -110,36 +93,35 @@
         .slideshow-slide { flex:0 0 100%; padding:0.8rem; text-align:center; }
         .slideshow-title { font-size:1.2rem; font-weight:bold; color:#ffaaaa; margin-bottom:0.5rem; }
         .slideshow-text { color:#ffcccc; font-size:0.85rem; }
-        .slideshow-link { display:inline-block; margin-top:0.5rem; color:#ffd700; text-decoration:underline; font-weight:bold; }
         .slideshow-timer { text-align:center; font-size:0.7rem; color:#ff8888; margin-top:0.3rem; }
         .stats { background:rgba(0,0,0,0.6); border-radius:40px; padding:0.6rem; margin-top:0.8rem; display:flex; justify-content:space-between; color:#ffcccc; }
         .ecosystem-grid { display:flex; flex-direction:column; gap:1.2rem; max-width:400px; margin:1rem auto; }
         .info-card { background:rgba(5,10,22,0.9); border-radius:2rem; padding:1rem; border:2px solid rgba(255,50,50,0.7); cursor:pointer; color:#ffcccc; }
         .info-card:hover { transform:translateY(-4px); box-shadow:0 0 12px #ff5555; }
-        .info-card .eco-logo { font-size:2.5rem; margin-bottom:0.5rem; color:#ff6666; filter:drop-shadow(0 0 4px #ff3333); }
+        .info-card .eco-logo { font-size:2.5rem; margin-bottom:0.5rem; color:#ff6666; }
         .info-card .eco-title { font-size:1.3rem; font-weight:bold; color:white; }
         .info-card .eco-desc { color:#ffcccc; font-size:0.75rem; }
         .back-btn { background:linear-gradient(95deg,#ff3333,#990000); border:none; padding:0.6rem 1.2rem; border-radius:50px; color:white; font-weight:bold; cursor:pointer; margin-top:1rem; }
-        .modal-overlay { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); backdrop-filter:blur(8px); display:flex; align-items:center; justify-content:center; z-index:2000; visibility:hidden; opacity:0; transition:0.2s; }
-        .modal-overlay.active { visibility:visible; opacity:1; }
-        .close-modal { background:#333; margin-top:1rem; padding:0.5rem; width:100%; border-radius:40px; color:white; border:none; cursor:pointer; }
+        .custom-modal { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); backdrop-filter:blur(6px); display:flex; align-items:center; justify-content:center; z-index:3000; visibility:hidden; opacity:0; transition:0.3s; }
+        .custom-modal.active { visibility:visible; opacity:1; }
+        .custom-modal-box { background:#0f0f1a; border-radius:2rem; padding:2rem 1.5rem; max-width:420px; width:90%; border:2px solid #ff5555; box-shadow:0 0 25px #ff333380; color:#ffcccc; text-align:center; animation:sparkleGlowRed 1.5s infinite alternate; overflow-y:auto; max-height:80vh; }
+        .custom-modal-box input { width:100%; padding:0.7rem; border-radius:30px; border:1px solid #ff5555; background:rgba(0,0,0,0.5); color:white; margin:0.8rem 0; }
+        .custom-modal-box button { margin:0.5rem; }
         .profile-form { max-width:400px; margin:1rem auto; }
         .profile-field { margin:1rem 0; text-align:left; }
         .profile-field label { display:block; color:#ffaaaa; margin-bottom:0.3rem; }
         .profile-field input { width:100%; padding:0.6rem; border-radius:2rem; border:1px solid #ff5555; background:rgba(0,0,0,0.6); color:white; }
         .static-value { background:rgba(0,0,0,0.5); padding:0.6rem; border-radius:2rem; color:#ffcccc; word-break:break-all; position:relative; }
         .blurred { filter:blur(6px); cursor:pointer; }
-        .clear { filter:none; }
         .eye-toggle,.copy-id-btn { background:transparent; border:none; color:#ffaaaa; cursor:pointer; font-size:1.2rem; margin-left:0.5rem; }
         .id-display-row { display:flex; align-items:center; justify-content:center; gap:0.5rem; }
         .training-attributes { max-width:500px; margin:1rem auto; }
         .attribute-row { display:flex; align-items:center; justify-content:space-between; margin:0.8rem 0; background:rgba(5,10,22,0.7); border-radius:2rem; padding:0.5rem 1rem; color:white; }
         .attribute-name { width:110px; font-weight:bold; color:#ffaaaa; }
         .bar-container { flex:1; height:20px; background:#331111; border-radius:20px; overflow:hidden; margin:0 0.5rem; }
-        .bar-fill { height:100%; width:0%; background:linear-gradient(90deg,#ff5555,#ff0000); border-radius:20px; transition:width 0.2s; }
+        .bar-fill { height:100%; width:0%; background:linear-gradient(90deg,#ff5555,#ff0000); border-radius:20px; }
         .attribute-value { width:50px; text-align:center; color:#ffcccc; }
         .upgrade-btn { background:#ff3333; border:none; padding:0.2rem 0.8rem; border-radius:30px; color:white; font-weight:bold; cursor:pointer; }
-        .referral-link { background:rgba(0,0,0,0.5); padding:0.5rem; border-radius:40px; margin:1rem 0; word-break:break-all; }
         .task-list { list-style:none; text-align:left; }
         .task-list li { margin:0.5rem 0; display:flex; align-items:center; gap:0.5rem; justify-content:space-between; }
         .task-btn { background:#ff3333; border:none; padding:0.3rem 1rem; border-radius:30px; color:white; font-size:0.8rem; cursor:pointer; }
@@ -151,15 +133,32 @@
         .backup-btns { display:flex; gap:1rem; margin-top:1rem; flex-wrap:wrap; }
         .friends-list { max-height:150px; overflow-y:auto; text-align:left; padding:0; list-style:none; }
         .friends-list li { padding:0.3rem 0; border-bottom:1px solid rgba(255,80,80,0.3); font-size:0.85rem; }
-        .custom-modal { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); backdrop-filter:blur(6px); display:flex; align-items:center; justify-content:center; z-index:3000; visibility:hidden; opacity:0; transition:0.3s; }
-        .custom-modal.active { visibility:visible; opacity:1; }
-        .custom-modal-box { background:#0f0f1a; border-radius:2rem; padding:2rem 1.5rem; max-width:420px; width:90%; border:2px solid #ff5555; box-shadow:0 0 25px #ff333380; color:#ffcccc; text-align:center; animation:sparkleGlowRed 1.5s infinite alternate; overflow-y:auto; max-height:80vh; }
-        .custom-modal-box input { width:100%; padding:0.7rem; border-radius:30px; border:1px solid #ff5555; background:rgba(0,0,0,0.5); color:white; margin:0.8rem 0; }
-        .custom-modal-box button { margin:0.5rem; }
-        .custom-modal-box textarea { width:100%; background:#1a1a2a; border:1px solid #ff5555; border-radius:1rem; padding:1rem; color:white; font-family:monospace; font-size:0.8rem; resize:none; }
-        .referral-buttons-row { display:flex; gap:0.8rem; margin-top:0.5rem; flex-wrap:wrap; justify-content:center; }
-        .referral-buttons-row .action-btn { min-width:unset; flex:1 1 auto; padding:0.6rem 1rem; font-size:0.9rem; }
-        .bonus-cooldown { color:#ffaaaa; font-size:0.75rem; margin-top:0.3rem; }
+        .referral-signup-banner { background:rgba(255,85,85,0.1); border:1px solid #ff5555; border-radius:12px; padding:0.5rem 1rem; margin-bottom:0.5rem; text-align:center; color:#ffaaaa; font-size:0.85rem; display:none; }
+        .referral-signup-banner.show { display:block; }
+        .wallet-screen { max-width:480px; width:100%; margin:0 auto; }
+        .wallet-balance-card { background:rgba(5,10,22,0.8); border-radius:2rem; padding:2rem 1rem; text-align:center; border:2px solid #ff5555; margin-bottom:1.5rem; }
+        .wallet-balance-value { font-size:3rem; font-weight:800; background:linear-gradient(135deg,#ffffff,#ffaaaa); -webkit-background-clip:text; background-clip:text; color:transparent; }
+        .wallet-actions { display:flex; justify-content:center; gap:0.6rem; margin-bottom:1.5rem; flex-wrap:wrap; }
+        .wallet-action-btn { flex:1; max-width:130px; min-width:100px; background:linear-gradient(95deg,#ff3333,#990000); border:none; padding:1rem 0.5rem; border-radius:50px; color:white; font-weight:bold; cursor:pointer; text-align:center; font-size:0.85rem; }
+        .wallet-action-btn i { font-size:1.5rem; display:block; margin-bottom:0.3rem; }
+        .wallet-history { background:rgba(5,10,22,0.7); border-radius:1.5rem; padding:1rem; border:1px solid rgba(255,50,50,0.4); margin-bottom:1rem; }
+        .history-item { display:flex; align-items:center; padding:0.5rem 0; border-bottom:1px solid rgba(255,80,80,0.2); }
+        .history-item:last-child { border-bottom:none; }
+        .history-icon { width:40px; text-align:center; font-size:1.2rem; }
+        .history-details { flex:1; margin-left:0.5rem; }
+        .history-name { font-weight:bold; color:#ffaaaa; }
+        .history-date { font-size:0.7rem; color:#ff8888; }
+        .history-amount { font-weight:bold; }
+        .history-amount.incoming { color:#00cc00; }
+        .history-amount.outgoing { color:#ff5555; }
+        .send-form { margin-top:1rem; }
+        .send-form label { display:block; text-align:left; color:#ffaaaa; margin-bottom:0.3rem; }
+        .send-form input { width:100%; background:rgba(0,0,0,0.5); border:1px solid #ff5555; color:white; padding:0.7rem; border-radius:30px; margin-bottom:0.8rem; }
+        .apk-auth-link { display:block; text-align:center; margin-top:1rem; color:#ffd700; text-decoration:underline; font-weight:bold; cursor:pointer; }
+        .purchase-status-badge { display:inline-block; padding:0.15rem 0.6rem; border-radius:20px; font-size:0.7rem; font-weight:bold; }
+        .purchase-status-badge.pending { background:#553300; color:#ffcc66; }
+        .purchase-status-badge.approved { background:#003300; color:#66ff66; }
+        .purchase-status-badge.rejected { background:#550000; color:#ff6666; }
         .airdrop-premium { width:100%; max-width:420px; margin:0 auto; text-align:center; }
         .airdrop-logo-wrapper { position:relative; width:200px; height:200px; margin:1rem auto 2rem; }
         .airdrop-logo-core { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:3.5rem; color:#ffd700; filter:drop-shadow(0 0 12px #ffd700); z-index:2; animation:corePulse 1.8s ease-in-out infinite; }
@@ -174,64 +173,18 @@
         .airdrop-percent { font-size:1.2rem; color:#ff8888; margin-bottom:1.5rem; }
         .airdrop-subtitle { color:#ffaaaa; font-size:0.95rem; margin-bottom:0.5rem; }
         .task-announcement { background:rgba(255,85,85,0.05); border-radius:12px; padding:0.5rem; margin:0.4rem 0; }
-        .referral-signup-banner {
-            background:rgba(255,85,85,0.1);
-            border:1px solid #ff5555;
-            border-radius:12px;
-            padding:0.5rem 1rem;
-            margin-bottom:0.5rem;
-            text-align:center;
-            color:#ffaaaa;
-            font-size:0.85rem;
-            display:none;
-        }
-        .referral-signup-banner.show { display:block; }
-        /* Wallet and marketplace styles */
-        .wallet-screen { max-width:480px; width:100%; margin:0 auto; }
-        .wallet-balance-card { background:rgba(5,10,22,0.8); border-radius:2rem; padding:2rem 1rem; text-align:center; border:2px solid #ff5555; margin-bottom:1.5rem; }
-        .wallet-balance-value { font-size:3rem; font-weight:800; background:linear-gradient(135deg,#ffffff,#ffaaaa); -webkit-background-clip:text; background-clip:text; color:transparent; }
-        .wallet-actions { display:flex; justify-content:center; gap:1rem; margin-bottom:1.5rem; }
-        .wallet-action-btn { flex:1; max-width:150px; background:linear-gradient(95deg,#ff3333,#990000); border:none; padding:1rem; border-radius:50px; color:white; font-weight:bold; cursor:pointer; text-align:center; }
-        .wallet-action-btn i { font-size:1.5rem; display:block; margin-bottom:0.3rem; }
-        .wallet-history { background:rgba(5,10,22,0.7); border-radius:1.5rem; padding:1rem; border:1px solid rgba(255,50,50,0.4); }
-        .history-item { display:flex; align-items:center; padding:0.5rem 0; border-bottom:1px solid rgba(255,80,80,0.2); }
-        .history-item:last-child { border-bottom:none; }
-        .history-icon { width:40px; text-align:center; font-size:1.2rem; }
-        .history-details { flex:1; margin-left:0.5rem; }
-        .history-name { font-weight:bold; color:#ffaaaa; }
-        .history-date { font-size:0.7rem; color:#ff8888; }
-        .history-amount { font-weight:bold; }
-        .history-amount.incoming { color:#00cc00; }
-        .history-amount.outgoing { color:#ff5555; }
-        .send-form { margin-top:1rem; }
-        .send-form label { display:block; text-align:left; color:#ffaaaa; margin-bottom:0.3rem; }
-        .send-form input { width:100%; background:rgba(0,0,0,0.5); border:1px solid #ff5555; color:white; padding:0.7rem; border-radius:30px; margin-bottom:0.8rem; }
-        .apk-auth-link { display:block; text-align:center; margin-top:1rem; color:#ffd700; text-decoration:underline; font-weight:bold; cursor:pointer; }
-        .marketplace-screen { max-width:480px; width:100%; margin:0 auto; }
-        .marketplace-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; }
-        .listing-card { background:rgba(5,10,22,0.8); border-radius:1.5rem; padding:1rem; border:2px solid #ff5555; margin-bottom:1rem; display:flex; justify-content:space-between; align-items:center; }
-        .listing-info { flex:1; }
-        .listing-amount { font-size:1.5rem; font-weight:bold; color:white; }
-        .listing-price { color:#ffcccc; font-size:0.9rem; }
-        .listing-total { color:#ffd700; font-weight:bold; }
-        .buy-btn { background:#228B22; border:none; padding:0.5rem 1rem; border-radius:30px; color:white; font-weight:bold; cursor:pointer; }
-        .cancel-btn { background:#990000; border:none; padding:0.3rem 0.8rem; border-radius:30px; color:white; cursor:pointer; font-size:0.8rem; }
-        .pending-label { color:#ff8888; font-style:italic; }
-        .locked-balance { background:rgba(0,0,0,0.5); border-radius:20px; padding:0.4rem 1rem; border:1px solid #ff5555; color:#ffaaaa; font-size:0.85rem; display:inline-block; }
-        /* Copy button */
-        .copy-address-btn {
-            background: transparent;
-            border: none;
-            color: #ffaaaa;
-            cursor: pointer;
-            font-size: 1.2rem;
-            margin-left: 0.5rem;
-            vertical-align: middle;
-        }
+        .toast-container { position:fixed; top:120px; left:50%; transform:translateX(-50%); z-index:5000; display:flex; flex-direction:column; gap:0.5rem; pointer-events:none; }
+        .toast { background:rgba(20,20,30,0.95); border:2px solid #ff5555; border-radius:40px; padding:0.7rem 1.3rem; color:#ffcccc; font-weight:bold; font-size:0.9rem; box-shadow:0 0 15px rgba(255,85,85,0.6); animation:toastIn 0.3s ease-out, toastOut 0.3s ease-in 1.5s forwards; display:flex; align-items:center; gap:0.5rem; }
+        .toast.success { border-color:#22a022; box-shadow:0 0 15px rgba(34,160,34,0.6); }
+        .toast.error { border-color:#ff2222; box-shadow:0 0 15px rgba(255,34,34,0.6); }
+        @keyframes toastIn { from{opacity:0; transform:translateY(-10px);} to{opacity:1; transform:translateY(0);} }
+        @keyframes toastOut { from{opacity:1;} to{opacity:0; transform:translateY(-10px);} }
+        .required-star { color:#ff5555; font-weight:bold; }
     </style>
 </head>
 <body>
-<!-- Auth Screen -->
+<div id="toastContainer" class="toast-container"></div>
+
 <div id="authScreen" class="screen">
     <div class="auth-card">
         <div class="auth-logo"><i class="fas fa-futbol"></i></div>
@@ -242,17 +195,11 @@
             <div class="auth-input-group"><i class="fas fa-lock"></i><input type="password" id="loginPassword" placeholder="Password"></div>
             <div class="error-message" id="loginError"></div>
             <button class="auth-btn" id="loginBtn">Log In</button>
-            <div class="auth-links" style="justify-content:center;">
-                <span class="auth-link" id="showSignUp">Create Account</span>
-            </div>
-            <div class="auth-links" style="justify-content:center;">
-                <span class="auth-link" id="showForgotPassword">Forgot Password?</span>
-            </div>
+            <div class="auth-links" style="justify-content:center;"><span class="auth-link" id="showSignUp">Create Account</span></div>
+            <div class="auth-links" style="justify-content:center;"><span class="auth-link" id="showForgotPassword">Forgot Password?</span></div>
         </div>
         <div id="signUpForm" class="auth-form" style="display:none;">
-            <div class="referral-signup-banner" id="referralSignupBanner">
-                <i class="fas fa-link"></i> Referred by: <span id="signupReferralCodeDisplay">—</span>
-            </div>
+            <div class="referral-signup-banner" id="referralSignupBanner"><i class="fas fa-link"></i> Referred by: <span id="signupReferralCodeDisplay">—</span></div>
             <div class="auth-input-group"><i class="fas fa-user"></i><input type="text" id="signUpUsername" placeholder="Username (3-20 chars)" maxlength="20"></div>
             <div class="auth-input-group"><i class="fas fa-envelope"></i><input type="email" id="signUpEmail" placeholder="Email"></div>
             <div class="auth-input-group"><i class="fas fa-lock"></i><input type="password" id="signUpPassword" placeholder="Password (min 6 characters)"></div>
@@ -270,12 +217,9 @@
     </div>
 </div>
 
-<!-- Main App Container -->
 <div id="appContainer" style="display:none;">
     <div class="top-bar">
-        <div class="header-title-row">
-            <div class="app-title">METAFOOT</div>
-        </div>
+        <div class="header-title-row"><div class="app-title">METAFOOT</div></div>
         <div class="header-controls-row">
             <div class="left-controls">
                 <div class="menu-btn" id="menuBtn"><i class="fas fa-bars"></i></div>
@@ -301,12 +245,10 @@
         <div class="nav-item" id="navHome"><i class="fas fa-home"></i><span>Home</span></div>
         <div class="nav-item" id="navReferral"><i class="fas fa-link"></i><span>Referral</span></div>
         <div class="nav-item" id="navTask"><i class="fas fa-tasks"></i><span>Task</span></div>
-        <div class="nav-item" id="navMarketplace"><i class="fas fa-store"></i><span>Market</span></div>
         <div class="nav-item" id="navWallet"><i class="fas fa-wallet"></i><span>Wallet</span></div>
         <div class="nav-item" id="navEcosystem"><i class="fas fa-globe"></i><span>Ecosystem</span></div>
     </div>
 
-    <!-- Mining Screen -->
     <div id="miningScreen" class="screen">
         <div class="mining-dashboard">
             <div class="mode-toggle">
@@ -325,10 +267,6 @@
             <div id="actionButtonsContainer" class="action-buttons">
                 <button class="action-btn" id="trainBtn"><i class="fas fa-dumbbell"></i> Train Player</button>
             </div>
-            <div style="margin:1rem auto; max-width:480px;">
-                <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-3940256099942544" data-ad-slot="6303424663" data-ad-format="auto" data-full-width-responsive="true"></ins>
-                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-            </div>
             <div class="slideshow-container" id="slideshowContainer">
                 <div class="slideshow-wrapper" id="slideshowWrapper"></div>
                 <div class="slideshow-timer" id="slideshowTimer">Next slide in 40s</div>
@@ -336,7 +274,6 @@
         </div>
     </div>
 
-    <!-- Referral Screen -->
     <div id="referralScreen" class="screen hidden">
         <div class="info-screen">
             <div class="info-card" style="cursor:default;max-width:500px;margin:0 auto;">
@@ -361,7 +298,6 @@
         </div>
     </div>
 
-    <!-- Tasks Screen -->
     <div id="taskScreen" class="screen hidden">
         <div class="info-screen">
             <div class="info-card" style="cursor:default;">
@@ -375,23 +311,6 @@
         </div>
     </div>
 
-    <!-- Marketplace Screen -->
-    <div id="marketplaceScreen" class="screen hidden">
-        <div class="marketplace-screen">
-            <div class="marketplace-header">
-                <h2 style="color:#ffaaaa;"><i class="fas fa-store"></i> Marketplace</h2>
-                <button class="action-btn" id="createListingBtn">+ Sell $FOOT</button>
-            </div>
-            <div id="eligibilityInfo" class="locked-balance">You must have spent at least 800 $FOOT on training to sell.</div>
-            <div id="lockedBalanceInfo" class="locked-balance">Locked in escrow: <span id="lockedAmount">0</span> $FOOT</div>
-            <h3 style="color:#ffcccc; margin:1rem 0;">Open Listings</h3>
-            <div id="openListingsContainer"></div>
-            <h3 style="color:#ffcccc; margin:1rem 0;">My Listings & Purchases</h3>
-            <div id="myListingsContainer"></div>
-        </div>
-    </div>
-
-    <!-- Wallet Screen -->
     <div id="walletScreen" class="screen hidden">
         <div class="wallet-screen">
             <div class="wallet-balance-card">
@@ -399,31 +318,31 @@
                 <div class="wallet-balance-value" id="walletScreenBalance">0</div>
                 <div style="color:#ffcccc;">$FOOT</div>
             </div>
-
             <div class="wallet-actions">
                 <div class="wallet-action-btn" id="sendCoinBtn"><i class="fas fa-paper-plane"></i> Send</div>
                 <div class="wallet-action-btn" id="receiveCoinBtn"><i class="fas fa-qrcode"></i> Receive</div>
+                <div class="wallet-action-btn" id="buyFootBtn" style="background:linear-gradient(95deg,#22a022,#0a5a0a);"><i class="fas fa-shopping-cart"></i> Buy $FOOT</div>
             </div>
-
+            <div id="incomingTransfersContainer"></div>
             <div class="wallet-history">
                 <h3 style="color:#ffaaaa; margin-bottom:0.5rem;">Transaction History</h3>
-                <div id="walletHistoryList">
-                    <p style="color:#ff8888;">Loading transactions…</p>
-                </div>
+                <div id="walletHistoryList"><p style="color:#ff8888;">Loading transactions…</p></div>
+            </div>
+            <div class="wallet-history">
+                <h3 style="color:#ffaaaa; margin-bottom:0.5rem;">My Purchases</h3>
+                <div id="myPurchasesList"><p style="color:#ff8888;">Loading purchases…</p></div>
             </div>
         </div>
     </div>
 
-    <!-- Ecosystem Screen -->
     <div id="ecosystemScreen" class="screen hidden">
         <div style="text-align:center;max-width:500px;margin:0 auto;">
             <h2 style="font-size:2rem;background:linear-gradient(135deg,#ff8888,#ff2222);-webkit-background-clip:text;background-clip:text;color:transparent;"><i class="fas fa-globe"></i> METAFOOT Ecosystem</h2>
             <div class="ecosystem-grid">
-                <div class="info-card stadium-card-highlight" id="stadiumCard">
+                <div class="info-card" id="stadiumCard">
                     <div class="eco-logo"><i class="fas fa-futbol"></i></div>
                     <div class="eco-title">🏟️ METAFOOT Stadium</div>
                     <div class="eco-desc">Limited Edition · Only 5,000 available</div>
-                    <div class="stadium-count-badge" id="stadiumRemainingBadge">5,000 left</div>
                 </div>
                 <div class="info-card" id="visionCard">
                     <div class="eco-logo"><i class="fas fa-chalkboard-user"></i></div>
@@ -434,14 +353,11 @@
         </div>
     </div>
 
-    <!-- Airdrop Dashboard -->
     <div id="airdropDashboardScreen" class="screen hidden">
         <div class="airdrop-premium">
             <div class="airdrop-logo-wrapper">
-                <div class="airdrop-ring"></div>
-                <div class="airdrop-ring"></div>
-                <div class="airdrop-ring"></div>
-                <div class="airdrop-ring"></div>
+                <div class="airdrop-ring"></div><div class="airdrop-ring"></div>
+                <div class="airdrop-ring"></div><div class="airdrop-ring"></div>
                 <div class="airdrop-logo-core"><i class="fas fa-bolt"></i></div>
             </div>
             <div class="airdrop-subtitle">Total $FOOT Mined</div>
@@ -451,7 +367,6 @@
         </div>
     </div>
 
-    <!-- Halving Screen -->
     <div id="halvingScreen" class="screen hidden">
         <div style="width:100%;max-width:600px;margin:0 auto; text-align:center;">
             <h1 style="color:#ffaaaa;">📉 HALVING MECHANISM</h1>
@@ -461,7 +376,6 @@
         </div>
     </div>
 
-    <!-- Training Screen -->
     <div id="trainingScreen" class="screen hidden">
         <div style="width:100%;max-width:550px;margin:0 auto;">
             <h2 style="color:#ffaaaa;">🏋️ Train Your Player</h2>
@@ -471,12 +385,10 @@
             </div>
             <div class="training-attributes" id="trainingAttributesContainer"></div>
             <button class="back-btn" id="backFromTrainingBtn">← Back to Home</button>
-            <div class="training-chart-container"><div class="training-chart-title">📊 Training Cost Halving</div><div id="trainingChartInner"></div></div>
             <div class="stats"><span>Balance: <strong id="trainingBalance">0</strong> $FOOT</span><span>Total Spent: <strong id="totalSpentDisplay">0.0</strong> $FOOT</span></div>
         </div>
     </div>
 
-    <!-- Profile Screen -->
     <div id="profileScreen" class="screen hidden">
         <div class="profile-form" style="max-width:400px;margin:0 auto;">
             <h2 style="text-align:center;color:#ffaaaa;">👤 Profile</h2>
@@ -490,12 +402,9 @@
     </div>
 </div>
 
-<!-- Modals -->
 <div id="customModalOverlay" class="custom-modal"><div class="custom-modal-box" id="customModalBox"></div></div>
-<div id="loadingModalOverlay" class="custom-modal" style="z-index:4001;"><div class="custom-modal-box"><h3 style="color:#ffaaaa;">Restoring your wallet…</h3><div class="loader"></div><p style="color:#ffcccc; margin-top:1rem;">Fetching your data from the cloud.</p></div></div>
 
 <script>
-    // ===================== FIREBASE CONFIG =====================
     const firebaseConfig = {
         apiKey: "AIzaSyDsu_zlNzi_qC-psSKaiQjci6OxIra3h-k",
         authDomain: "metafoot-4c82b.firebaseapp.com",
@@ -509,15 +418,13 @@
     const db = firebase.firestore();
     const auth = firebase.auth();
 
-    // ===================== CONSTANTS =====================
     const APK_DOWNLOAD_URL = 'https://github.com/metafooot/Metafoott/releases/tag/Metafoot';
-    const FOOT_PRICE_USDT = 0.02;
-    const ESCROW_ADDRESS = '0x7126590d91d980ccd796fef44d432def98b81a63'; // Polygon
-    const ESCROW_NETWORK = 'Polygon (USDT)';
+    const FOOT_BUY_PRICE_USDT = 0.05;
+    const DEPOSIT_ADDRESS = '0x7126590d91d980ccd796fef44d432def98b81a63';
+    const DEPOSIT_NETWORK = 'Polygon (USDT)';
     const MIN_TRAINING_SPENT_FOR_SELLING = 800;
     const STADIUM_TOTAL_SUPPLY = 5000;
 
-    // ===================== GLOBALS =====================
     let currentUserId = null;
     let currentReferralCode = null;
     const USER_BALANCE_KEY = 'metafoot_balance';
@@ -537,13 +444,21 @@
     const customModal = document.getElementById('customModalOverlay');
     const customModalBox = document.getElementById('customModalBox');
 
-    // ------------------- Helper Functions -------------------
+    // ===================== TOAST =====================
+    function showToast(message, type) {
+        const container = document.getElementById('toastContainer');
+        const toast = document.createElement('div');
+        toast.className = 'toast' + (type ? ' ' + type : '');
+        const icon = type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle';
+        toast.innerHTML = `<i class="fas ${icon}"></i> ${message}`;
+        container.appendChild(toast);
+        setTimeout(() => { if (toast.parentNode) toast.parentNode.removeChild(toast); }, 1800);
+    }
+
     function captureReferralFromUrl() {
         const params = new URLSearchParams(window.location.search);
         const ref = params.get('ref');
-        if (ref && /^[a-f0-9]{12}$/i.test(ref)) {
-            localStorage.setItem('pending_ref_code', ref);
-        }
+        if (ref && /^[a-f0-9]{12}$/i.test(ref)) localStorage.setItem('pending_ref_code', ref);
     }
     captureReferralFromUrl();
 
@@ -555,36 +470,27 @@
     function addToUserBalance(amount) { setUserBalance(getUserBalance()+amount); }
     function updateWalletDisplay() {
         document.getElementById('walletBalance').innerText = getUserBalance().toLocaleString();
-        const walletScreenBalance = document.getElementById('walletScreenBalance');
-        if (walletScreenBalance) walletScreenBalance.innerText = getUserBalance().toLocaleString();
+        const wsb = document.getElementById('walletScreenBalance');
+        if (wsb) wsb.innerText = getUserBalance().toLocaleString();
     }
     function formatTime(ms) { const h=Math.floor(ms/3600000); const m=Math.floor((ms%3600000)/60000); const s=Math.floor((ms%60000)/1000); return `${h}h ${m}m ${s}s`; }
     function getUpgradeCost(level) { return BASE_COST * Math.pow(2, Math.floor(level/TIER_SIZE)); }
     function calcTotalSpent(attrs) { let total=0; for(let attr in attrs) for(let l=0; l<(attrs[attr]||0); l++) total += getUpgradeCost(l); return total; }
-    function secureRandomHex12() { if (window.crypto && window.crypto.getRandomValues) { const arr = new Uint8Array(6); window.crypto.getRandomValues(arr); return Array.from(arr, b => b.toString(16).padStart(2,'0')).join(''); } else return Math.random().toString(16).substring(2,14).padEnd(12,'0'); }
-
+    function secureRandomHex12() { const arr = new Uint8Array(6); window.crypto.getRandomValues(arr); return Array.from(arr, b => b.toString(16).padStart(2,'0')).join(''); }
     function copyToClipboard(text) {
-        if (navigator.clipboard && navigator.clipboard.writeText) {
-            return navigator.clipboard.writeText(text).then(() => true).catch(() => { return legacyCopy(text); });
-        } else { return Promise.resolve(legacyCopy(text)); }
+        if (navigator.clipboard && navigator.clipboard.writeText) return navigator.clipboard.writeText(text).then(() => true).catch(() => legacyCopy(text));
+        return Promise.resolve(legacyCopy(text));
     }
     function legacyCopy(text) {
-        const textarea = document.createElement('textarea');
-        textarea.value = text;
-        textarea.style.position = 'fixed';
-        textarea.style.opacity = '0';
-        document.body.appendChild(textarea);
-        textarea.select();
-        try { document.execCommand('copy'); return true; } catch (e) { return false; }
-        finally { document.body.removeChild(textarea); }
+        const ta = document.createElement('textarea'); ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+        document.body.appendChild(ta); ta.select();
+        try { document.execCommand('copy'); return true; } catch(e) { return false; } finally { document.body.removeChild(ta); }
     }
-
-    function showModal(title, contentHTML) {
-        customModalBox.innerHTML = `<h3 style="color:#ffaaaa;margin-bottom:1rem;">${title}</h3><div>${contentHTML}</div><button class="action-btn" onclick="document.getElementById('customModalOverlay').classList.remove('active')">Close</button>`;
+    function showModal(title, html) {
+        customModalBox.innerHTML = `<h3 style="color:#ffaaaa;margin-bottom:1rem;">${title}</h3><div>${html}</div><button class="action-btn" onclick="document.getElementById('customModalOverlay').classList.remove('active')">Close</button>`;
         customModal.classList.add('active');
     }
 
-    // ===================== AUTH =====================
     function showAuthMode(mode) {
         document.getElementById('loginForm').style.display = mode==='login' ? 'block' : 'none';
         document.getElementById('signUpForm').style.display = mode==='signup' ? 'block' : 'none';
@@ -594,115 +500,68 @@
             const pendingRef = localStorage.getItem('pending_ref_code');
             const banner = document.getElementById('referralSignupBanner');
             const codeDisplay = document.getElementById('signupReferralCodeDisplay');
-            if (pendingRef) {
-                banner.classList.add('show');
-                codeDisplay.innerText = pendingRef;
-            } else {
-                banner.classList.remove('show');
-            }
+            if (pendingRef) { banner.classList.add('show'); codeDisplay.innerText = pendingRef; } else banner.classList.remove('show');
         }
     }
 
-    // ===================== USERNAME & BADGE =====================
-    async function isUsernameAvailable(username) {
-        const doc = await db.collection('usernames').doc(username).get();
-        return !doc.exists;
-    }
-
+    async function isUsernameAvailable(username) { const d = await db.collection('usernames').doc(username).get(); return !d.exists; }
     async function reserveUsername(uid, username) {
         const userRef = db.collection('users').doc(uid);
         const usernameRef = db.collection('usernames').doc(username);
-        await db.runTransaction(async (transaction) => {
-            const userDoc = await transaction.get(userRef);
-            const usernameDoc = await transaction.get(usernameRef);
-            if (usernameDoc.exists) throw new Error('Username already taken');
-            transaction.set(userRef, { username: username }, { merge: true });
-            transaction.set(usernameRef, { uid: uid });
+        await db.runTransaction(async (t) => {
+            const uDoc = await t.get(userRef); const nDoc = await t.get(usernameRef);
+            if (nDoc.exists) throw new Error('Username already taken');
+            t.set(userRef, { username }, { merge: true });
+            t.set(usernameRef, { uid });
         });
     }
-
     async function changeUsername(newUsername) {
-        if (!currentUserId) return;
+        if (!currentUserId) return false;
         const oldUsername = getStorage('profile_username');
-        if (!await isUsernameAvailable(newUsername)) {
-            showModal('Username taken', 'Please choose a different username.');
-            return false;
-        }
+        if (!await isUsernameAvailable(newUsername)) { showToast('Username already taken', 'error'); return false; }
         if (oldUsername) { try { await db.collection('usernames').doc(oldUsername).delete(); } catch(e) {} }
         try {
             await reserveUsername(currentUserId, newUsername);
             setStorage('profile_username', newUsername);
             document.getElementById('usernameDisplay').innerText = newUsername;
             return true;
-        } catch(e) { showModal('Error', 'Could not change username. Please try again.'); return false; }
+        } catch(e) { showToast('Could not change username', 'error'); return false; }
     }
 
     function updateAmbassadorBadge(tier) {
-        const badge = document.getElementById('ambassadorBadge');
-        if (!badge) return;
-        if (tier && tier !== 'none') {
-            badge.style.display = 'inline-flex';
-            badge.className = 'ambassador-badge ' + tier;
-            badge.title = {
-                lite: 'Lite Ambassador',
-                bronze: 'Bronze Ambassador',
-                silver: 'Silver Ambassador',
-                gold: 'Gold Ambassador',
-                team: 'Team Ambassador'
-            }[tier] || 'Ambassador';
-        } else {
-            badge.style.display = 'none';
-        }
+        const b = document.getElementById('ambassadorBadge');
+        if (!b) return;
+        if (tier && tier !== 'none') { b.style.display = 'inline-flex'; b.className = 'ambassador-badge ' + tier; }
+        else b.style.display = 'none';
     }
-
     async function refreshReferralBadge() {
         if (!currentUserId) return;
-        const userDoc = await db.collection('users').doc(currentUserId).get();
-        if (userDoc.exists) {
-            const tier = userDoc.data().ambassadorTier || null;
-            updateAmbassadorBadge(tier);
-        }
+        const u = await db.collection('users').doc(currentUserId).get();
+        if (u.exists) updateAmbassadorBadge(u.data().ambassadorTier || null);
     }
-
     async function loadReferralStats() {
         if (!currentUserId) return;
-        const userDoc = await db.collection('users').doc(currentUserId).get();
-        if (userDoc.exists) {
-            const data = userDoc.data();
-            const approvedCount = data.approvedReferralCount || 0;
-            document.getElementById('approvedReferralCount').innerText = approvedCount;
-
-            const friendsList = document.getElementById('friendsListContainer');
-            const friends = data.friends || [];
-            friendsList.innerHTML = '';
-            if (friends.length === 0) {
-                friendsList.innerHTML = '<li>No approved referrals yet.</li>';
-            } else {
-                friends.forEach(f => {
-                    const li = document.createElement('li');
-                    li.textContent = `${f.accountId ? f.accountId.substring(0,8)+'…' : 'Unknown'} — ${new Date(f.timestamp).toLocaleDateString()}`;
-                    friendsList.appendChild(li);
-                });
-            }
-        }
+        const u = await db.collection('users').doc(currentUserId).get();
+        if (!u.exists) return;
+        const data = u.data();
+        document.getElementById('approvedReferralCount').innerText = data.approvedReferralCount || 0;
+        const fl = document.getElementById('friendsListContainer');
+        const friends = data.friends || [];
+        fl.innerHTML = friends.length === 0 ? '<li>No approved referrals yet.</li>' :
+            friends.map(f => `<li>${f.accountId ? f.accountId.substring(0,8)+'…' : 'Unknown'} — ${new Date(f.timestamp).toLocaleDateString()}</li>`).join('');
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-        // Auth listeners
         document.getElementById('signUpBtn').addEventListener('click', async () => {
             const email = document.getElementById('signUpEmail').value.trim();
             const password = document.getElementById('signUpPassword').value;
             const username = document.getElementById('signUpUsername').value.trim();
             const err = document.getElementById('signUpError');
             if (!email || password.length < 6) { err.innerText = 'Valid email and password (6+ chars) required.'; return; }
-            if (!username || username.length < 3 || username.length > 20 || !/^[a-zA-Z0-9_]+$/.test(username)) {
-                err.innerText = 'Username must be 3-20 chars (letters, numbers, underscores only).'; return;
-            }
-            const available = await isUsernameAvailable(username);
-            if (!available) { err.innerText = 'Username already taken.'; return; }
+            if (!username || username.length < 3 || username.length > 20 || !/^[a-zA-Z0-9_]+$/.test(username)) { err.innerText = 'Username must be 3-20 chars (letters, numbers, underscores).'; return; }
+            if (!await isUsernameAvailable(username)) { err.innerText = 'Username already taken.'; return; }
             try { await auth.createUserWithEmailAndPassword(email, password); } catch(e) { err.innerText = e.message; }
         });
-
         document.getElementById('loginBtn').addEventListener('click', async () => {
             const email = document.getElementById('loginEmail').value.trim();
             const password = document.getElementById('loginPassword').value;
@@ -710,14 +569,12 @@
             if (!email || !password) { err.innerText = 'Enter email and password.'; return; }
             try { await auth.signInWithEmailAndPassword(email, password); } catch(e) { err.innerText = e.message; }
         });
-
         document.getElementById('forgotBtn').addEventListener('click', async () => {
             const email = document.getElementById('forgotEmail').value.trim();
             const err = document.getElementById('forgotError');
             if (!email) { err.innerText = 'Enter your email.'; return; }
-            try { await auth.sendPasswordResetEmail(email); alert('Password reset email sent! Check your inbox.'); showAuthMode('login'); } catch(e) { err.innerText = e.message; }
+            try { await auth.sendPasswordResetEmail(email); showToast('Reset email sent!', 'success'); showAuthMode('login'); } catch(e) { err.innerText = e.message; }
         });
-
         document.getElementById('showSignUp').addEventListener('click', () => showAuthMode('signup'));
         document.getElementById('showLoginFromSignUp').addEventListener('click', () => showAuthMode('login'));
         document.getElementById('showForgotPassword').addEventListener('click', () => showAuthMode('forgot'));
@@ -746,59 +603,34 @@
             }
         });
 
-        // ===================== FIRESTORE HELPERS =====================
         async function loadUserFromFirestore(uid) {
             const doc = await db.collection('users').doc(uid).get();
-            if (doc.exists) {
-                const data = doc.data();
-                const localBalance = getUserBalance();
-                setUserBalance(Math.max(localBalance, data.balance || 0));
-                if (data.attributes) {
-                    const localAttrs = getStorage('player_training_attrs');
-                    const parsedLocal = localAttrs ? JSON.parse(localAttrs) : {};
-                    const merged = {};
-                    for (const attr of attributes) merged[attr] = Math.max(parsedLocal[attr] || 0, data.attributes[attr] || 0);
-                    setStorage('player_training_attrs', JSON.stringify(merged));
-                    playerAttrs = merged;
-                    calculateEligibility();
-                } else {
-                    playerAttrs = {};
-                    calculateEligibility();
-                }
-                if (data.trainingEligible !== undefined) {
-                    trainingEligible = data.trainingEligible;
-                } else {
-                    trainingEligible = calculateEligibility();
-                }
-                updateEligibilityUI();
-                if (data.lastClaim) setStorage(LAST_CLAIM_KEY, data.lastClaim);
-                if (data.username) setStorage('profile_username', data.username);
-                if (data.referralCode) setStorage(REF_CODE_V2_KEY, data.referralCode);
-                if (data.hasStadium) setStorage('hasStadium', 'true');
-                if (data.claimedAnnouncements) setStorage('claimedAnnouncements', JSON.stringify(data.claimedAnnouncements));
-                if (data.ambassadorTier) setStorage('ambassador_tier', data.ambassadorTier);
-                return data;
-            }
-            return null;
+            if (!doc.exists) return null;
+            const data = doc.data();
+            setUserBalance(data.balance || 0);
+            playerAttrs = data.attributes || {};
+            setStorage('player_training_attrs', JSON.stringify(playerAttrs));
+            trainingEligible = data.trainingEligible === true;
+            totalTrainingSpent = calcTotalSpent(playerAttrs);
+            if (data.lastClaim) setStorage(LAST_CLAIM_KEY, data.lastClaim);
+            if (data.username) setStorage('profile_username', data.username);
+            if (data.referralCode) setStorage(REF_CODE_V2_KEY, data.referralCode);
+            if (data.claimedAnnouncements) setStorage('claimedAnnouncements', JSON.stringify(data.claimedAnnouncements));
+            return data;
         }
 
         async function saveUserToFirestore() {
             if (!currentUserId) return;
-            const userRef = db.collection('users').doc(currentUserId);
             const claimed = getStorage('claimedAnnouncements');
-            const userData = {
+            await db.collection('users').doc(currentUserId).set({
                 uid: currentUserId,
                 email: auth.currentUser.email,
-                balance: getUserBalance(),
                 attributes: playerAttrs,
                 trainingEligible: trainingEligible,
                 username: getStorage('profile_username') || '',
-                lastClaim: parseInt(getStorage(LAST_CLAIM_KEY)) || 0,
                 referralCode: currentReferralCode || getStorage(REF_CODE_V2_KEY) || '',
-                hasStadium: getStorage('hasStadium') === 'true',
                 claimedAnnouncements: claimed ? JSON.parse(claimed) : []
-            };
-            await userRef.set(userData, { merge: true });
+            }, { merge: true });
         }
 
         async function promptForUsername() {
@@ -807,15 +639,12 @@
                 <p style="color:#ffcccc; margin-bottom:1rem;">You need a username to continue.</p>
                 <div class="auth-input-group"><i class="fas fa-user"></i><input type="text" id="setUsernameInput" placeholder="Username (3-20 chars)" maxlength="20"></div>
                 <div class="error-message" id="setUsernameError"></div>
-                <button class="action-btn" id="setUsernameBtn">Set Username</button>
-            `;
+                <button class="action-btn" id="setUsernameBtn">Set Username</button>`;
             customModal.classList.add('active');
             document.getElementById('setUsernameBtn').addEventListener('click', async () => {
                 const username = document.getElementById('setUsernameInput').value.trim();
                 const err = document.getElementById('setUsernameError');
-                if (!username || username.length < 3 || username.length > 20 || !/^[a-zA-Z0-9_]+$/.test(username)) {
-                    err.innerText = 'Username must be 3-20 chars (letters, numbers, underscores only).'; return;
-                }
+                if (!username || username.length < 3 || username.length > 20 || !/^[a-zA-Z0-9_]+$/.test(username)) { err.innerText = 'Username must be 3-20 chars (letters, numbers, underscores).'; return; }
                 if (!await isUsernameAvailable(username)) { err.innerText = 'Username already taken.'; return; }
                 try {
                     await reserveUsername(currentUserId, username);
@@ -827,39 +656,33 @@
             });
         }
 
-        // ===================== GAME LOGIC =====================
         async function claimRewardFirestore() {
             if (!currentUserId) return;
             const userRef = db.collection('users').doc(currentUserId);
-            const globalRef = db.collection('global').doc('stats');
             try {
-                await db.runTransaction(async (transaction) => {
-                    const [userDoc, globalDoc] = await Promise.all([transaction.get(userRef), transaction.get(globalRef)]);
-                    const userData = userDoc.exists ? userDoc.data() : { balance:0, lastClaim:0 };
-                    const globalData = globalDoc.exists ? globalDoc.data() : { totalMiners:0, totalDistributed:0 };
+                await db.runTransaction(async (t) => {
+                    const uDoc = await t.get(userRef);
+                    const uData = uDoc.exists ? uDoc.data() : { balance:0, lastClaim:0 };
                     const now = Date.now();
-                    const lastClaim = userData.lastClaim || 0;
+                    const lastClaim = uData.lastClaim || 0;
                     if (now - lastClaim < 86400000) throw new Error('ALREADY_CLAIMED:' + (86400000 - (now - lastClaim)));
-                    const rate = getCurrentRate(globalData.totalMiners);
-                    if (globalData.totalDistributed + rate > TOTAL_AIRDROP_CAP) throw new Error('Airdrop cap reached');
-                    transaction.set(globalRef, { totalMiners: globalData.totalMiners, totalDistributed: globalData.totalDistributed + rate }, { merge: true });
-                    const newBalance = (userData.balance || 0) + rate;
-                    transaction.set(userRef, { balance: newBalance, lastClaim: now }, { merge: true });
+                    const rate = getCurrentRate(parseInt(getStorage('global_total_miners'))||0);
+                    const newBalance = (uData.balance || 0) + rate;
+                    t.update(userRef, { balance: newBalance, lastClaim: now });
                     return rate;
                 }).then((rate) => {
-                    addToUserBalance(rate);
+                    setUserBalance(getUserBalance() + rate);
                     setStorage(LAST_CLAIM_KEY, Date.now().toString());
                     updateMiningStats();
                     confetti({ particleCount:120, spread:70, origin:{y:0.6}, colors:['#ff3333','#ff8888'] });
-                    showModal('Claimed', `🎉 You claimed ${rate} $FOOT!`);
+                    showToast(`You claimed ${rate} $FOOT!`, 'success');
                     updateCircularTimer();
-                    saveUserToFirestore();
                 });
             } catch (e) {
                 if (e.message.startsWith('ALREADY_CLAIMED:')) {
                     const rem = parseInt(e.message.split(':')[1]);
-                    showModal('Already claimed', `You can claim again in ${formatTime(rem)}.`);
-                } else showModal('Claim failed', e.message);
+                    showToast(`Claim again in ${formatTime(rem)}`, 'error');
+                } else showToast('Claim failed: ' + e.message, 'error');
             }
         }
 
@@ -874,61 +697,36 @@
         async function buyStadiumFirestore() {
             if (!currentUserId) return;
             const userRef = db.collection('users').doc(currentUserId);
-            const globalRef = db.collection('global').doc('stats');
             try {
-                await db.runTransaction(async (transaction) => {
-                    const [userDoc, globalDoc] = await Promise.all([transaction.get(userRef), transaction.get(globalRef)]);
-                    const userData = userDoc.exists ? userDoc.data() : { balance:0, hasStadium:false };
-                    const globalData = globalDoc.exists ? globalDoc.data() : { stadiumsSold:0, stadiumOwners:{} };
-                    if (userData.hasStadium) throw new Error('You already own a stadium');
-                    if (globalData.stadiumsSold >= STADIUM_TOTAL_SUPPLY) throw new Error('All stadiums sold out');
-                    if (userData.balance < 2000) throw new Error('Insufficient balance. You need 2000 $FOOT.');
-                    const newBalance = userData.balance - 2000;
-                    const newSold = (globalData.stadiumsSold || 0) + 1;
-                    const newOwners = { ...(globalData.stadiumOwners || {}), [currentUserId]: true };
-                    transaction.set(userRef, { balance: newBalance, hasStadium: true }, { merge: true });
-                    transaction.set(globalRef, { stadiumsSold: newSold, stadiumOwners: newOwners }, { merge: true });
-                    return newSold;
-                }).then(() => {
-                    addToUserBalance(-2000);
-                    setStorage('hasStadium', 'true');
-                    updateMiningStats();
-                    confetti({ particleCount:200, spread:100, origin:{y:0.6}, colors:['#ffd700','#ff8c00'] });
-                    showModal('Stadium Purchased!', 'You now own a METAFOOT Stadium. 🏟️');
-                    saveUserToFirestore();
+                await db.runTransaction(async (t) => {
+                    const uDoc = await t.get(userRef);
+                    const uData = uDoc.data();
+                    if (uData.hasStadium) throw new Error('You already own a stadium');
+                    if (uData.balance < 2000) throw new Error('Insufficient balance. You need 2000 $FOOT.');
+                    t.update(userRef, { balance: (uData.balance || 0) - 2000, hasStadium: true });
                 });
-            } catch (e) { showModal('Purchase failed', e.message); }
+                setUserBalance(getUserBalance() - 2000);
+                setStorage('hasStadium', 'true');
+                confetti({ particleCount:200, spread:100, origin:{y:0.6}, colors:['#ffd700','#ff8c00'] });
+                showToast('Stadium purchased! 🏟️', 'success');
+            } catch (e) { showToast('Purchase failed: ' + e.message, 'error'); }
         }
 
-        // ===================== REFERRAL (PENDING AUTO) =====================
         async function submitReferralRequest(referrerCode, referredUserId) {
             if (!referredUserId || referrerCode === currentReferralCode) throw new Error('Invalid referral');
-            const existing = await db.collection('pendingReferrals')
-                .where('referredUserId', '==', referredUserId)
-                .get();
-            const hasExisting = existing.docs.some(doc => {
-                const data = doc.data();
-                return data.status === 'pending' || data.status === 'approved';
-            });
-            if (hasExisting) throw new Error('You already have a referral pending or approved.');
-            await db.collection('pendingReferrals').add({
-                referrerCode: referrerCode,
-                referredUserId: referredUserId,
-                timestamp: Date.now(),
-                status: 'pending'
-            });
+            const existing = await db.collection('pendingReferrals').where('referredUserId', '==', referredUserId).get();
+            const has = existing.docs.some(d => { const s = d.data().status; return s === 'pending' || s === 'approved'; });
+            if (has) throw new Error('You already have a referral pending or approved.');
+            await db.collection('pendingReferrals').add({ referrerCode, referredUserId, timestamp: Date.now(), status: 'pending' });
         }
 
-        // ===================== UI FUNCTIONS =====================
         async function updateMiningStats() {
             let totalMiners = 0;
             try {
-                const statsDoc = await db.collection('global').doc('stats').get();
-                if (statsDoc.exists) totalMiners = statsDoc.data().totalMiners || 0;
+                const s = await db.collection('global').doc('stats').get();
+                if (s.exists) totalMiners = s.data().totalMiners || 0;
                 setStorage('global_total_miners', totalMiners);
-            } catch (e) {
-                totalMiners = parseInt(getStorage('global_total_miners')) || 0;
-            }
+            } catch(e) { totalMiners = parseInt(getStorage('global_total_miners')) || 0; }
             document.getElementById('miningRateDisplay').innerHTML = `${getCurrentRate(totalMiners)} $FOOT / day`;
             updateWalletDisplay();
         }
@@ -938,31 +736,13 @@
             if (!last) { timer.innerText = 'Ready!'; return; }
             const diff = (parseInt(last) + 86400000) - Date.now();
             if (diff <= 0) timer.innerText = 'Ready!';
-            else { const h=Math.floor(diff/3600000); const m=Math.floor((diff%3600000)/60000); const s=Math.floor((diff%60000)/1000); timer.innerText = `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`; }
+            else { const h=Math.floor(diff/3600000), m=Math.floor((diff%3600000)/60000), s=Math.floor((diff%60000)/1000); timer.innerText = `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`; }
         }
-
         function calculateEligibility() {
             totalTrainingSpent = calcTotalSpent(playerAttrs);
             trainingEligible = totalTrainingSpent >= MIN_TRAINING_SPENT_FOR_SELLING;
-            updateEligibilityUI();
             return trainingEligible;
         }
-
-        function updateEligibilityUI() {
-            const eligibilityInfo = document.getElementById('eligibilityInfo');
-            if (eligibilityInfo) {
-                if (trainingEligible) {
-                    eligibilityInfo.textContent = '✅ You are eligible to sell.';
-                    eligibilityInfo.style.color = '#00cc00';
-                } else {
-                    eligibilityInfo.textContent = `⛔ You need to spend at least ${MIN_TRAINING_SPENT_FOR_SELLING} $FOOT on training to sell. Currently spent: ${totalTrainingSpent.toFixed(2)} $FOOT`;
-                    eligibilityInfo.style.color = '#ff5555';
-                }
-            }
-            const createBtn = document.getElementById('createListingBtn');
-            if (createBtn) createBtn.disabled = !trainingEligible;
-        }
-
         function loadAttributes() {
             const stored = getStorage('player_training_attrs');
             playerAttrs = stored ? JSON.parse(stored) : Object.fromEntries(attributes.map(a => [a,0]));
@@ -973,251 +753,253 @@
             calculateEligibility();
         }
         function renderTrainingScreen() {
-            const balance = getUserBalance();
-            document.getElementById('trainingBalance').innerText = balance.toLocaleString();
+            document.getElementById('trainingBalance').innerText = getUserBalance().toLocaleString();
             document.getElementById('playerIdDisplay').innerText = `ID: ${currentUserId ? currentUserId.substring(0,8) : '—'}`;
             const worth = calcTotalSpent(playerAttrs);
             document.getElementById('playerWorthDisplay').innerHTML = `Worth: ${worth.toFixed(1)} $FOOT`;
             document.getElementById('totalSpentDisplay').innerText = worth.toFixed(1);
-            const container = document.getElementById('trainingAttributesContainer');
-            container.innerHTML = '';
+            const c = document.getElementById('trainingAttributesContainer');
+            c.innerHTML = '';
             attributes.forEach(attr => {
                 const val = playerAttrs[attr]||0;
-                const percent = Math.min(100,val)+'%';
                 const nextCost = val<100 ? getUpgradeCost(val) : null;
                 const row = document.createElement('div');
                 row.className = 'attribute-row';
-                row.innerHTML = `<div class="attribute-name">${attr.charAt(0).toUpperCase()+attr.slice(1)}</div><div class="bar-container"><div class="bar-fill" style="width:${percent};"></div></div><div class="attribute-value">${val}</div>${nextCost ? `<button class="upgrade-btn" data-attr="${attr}" data-cost="${nextCost.toFixed(2)}">+1 (${nextCost.toFixed(2)})</button>` : '<button class="upgrade-btn" disabled>Max</button>'}`;
-                container.appendChild(row);
+                row.innerHTML = `<div class="attribute-name">${attr.charAt(0).toUpperCase()+attr.slice(1)}</div><div class="bar-container"><div class="bar-fill" style="width:${Math.min(100,val)}%;"></div></div><div class="attribute-value">${val}</div>${nextCost ? `<button class="upgrade-btn" data-attr="${attr}" data-cost="${nextCost.toFixed(2)}">+1 (${nextCost.toFixed(2)})</button>` : '<button class="upgrade-btn" disabled>Max</button>'}`;
+                c.appendChild(row);
             });
             document.querySelectorAll('.upgrade-btn:not([disabled])').forEach(btn => {
-                btn.addEventListener('click', () => {
+                btn.addEventListener('click', async () => {
                     const attr = btn.dataset.attr, cost = parseFloat(btn.dataset.cost);
-                    if (getUserBalance() >= cost) {
-                        addToUserBalance(-cost);
-                        playerAttrs[attr] = (playerAttrs[attr]||0)+1;
-                        saveAttributes();
-                        renderTrainingScreen();
-                        updateWalletDisplay();
-                    } else showModal('Need more $FOOT', `You need ${cost.toFixed(2)} $FOOT.`);
+                    if (getUserBalance() < cost) { showToast(`Need ${cost.toFixed(2)} $FOOT`, 'error'); return; }
+                    playerAttrs[attr] = (playerAttrs[attr]||0)+1;
+                    saveAttributes();
+                    const newBal = getUserBalance() - cost;
+                    setUserBalance(newBal);
+                    await saveUserToFirestore();
+                    await db.collection('users').doc(currentUserId).update({ balance: newBal });
+                    renderTrainingScreen();
+                    updateWalletDisplay();
                 });
             });
-            const tiers = [0,20,40,60,80,100]; const maxCost = getUpgradeCost(99);
-            document.getElementById('trainingChartInner').innerHTML = tiers.map(lvl => {
-                const cost = lvl<100 ? getUpgradeCost(lvl) : getUpgradeCost(99);
-                return `<div class="chart-row"><div class="chart-label">Lvl ${lvl}</div><div class="chart-bar-container"><div class="chart-bar" style="width:${(cost/maxCost)*100}%;"></div></div><div class="chart-value">${cost.toFixed(2)}</div></div>`;
-            }).join('');
         }
         function openTrainingScreen() {
-            if (!trainingEnabled) {
-                showModal('Training Disabled', 'Training is temporarily disabled. Please try again later.');
-                return;
-            }
-            loadAttributes();
-            renderTrainingScreen();
-            hideAllScreens();
-            document.getElementById('trainingScreen').classList.remove('hidden');
+            if (!trainingEnabled) { showToast('Training is temporarily disabled', 'error'); return; }
+            loadAttributes(); renderTrainingScreen();
+            hideAllScreens(); document.getElementById('trainingScreen').classList.remove('hidden');
         }
-        function hideAllScreens() {
-            const trainingScreen = document.getElementById('trainingScreen');
-            if (trainingScreen && !trainingScreen.classList.contains('hidden')) {
-                saveUserToFirestore();
-            }
-            document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
-        }
+        function hideAllScreens() { document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden')); }
         function showScreen(id) { hideAllScreens(); document.getElementById(id).classList.remove('hidden'); }
         function setUIRole(role) {
-            const roleHeader = document.getElementById('roleHeader'), actionContainer = document.getElementById('actionButtonsContainer');
-            if(role==='player') {
-                roleHeader.innerHTML = `<div class="role-badge">⚡ Player Mode</div><h1><i class="fas fa-futbol"></i> Player Mining</h1>`;
-                document.getElementById('switchToPlayerBtn').classList.add('active'); document.getElementById('switchToManagerBtn').classList.remove('active');
-                actionContainer.innerHTML = '<button class="action-btn" id="trainBtn"><i class="fas fa-dumbbell"></i> Train Player</button>';
+            const rh = document.getElementById('roleHeader'), ac = document.getElementById('actionButtonsContainer');
+            if (role==='player') {
+                rh.innerHTML = `<div class="role-badge" style="background:#ff333320;display:inline-block;padding:0.2rem 1rem;border-radius:40px;">⚡ Player Mode</div><h1><i class="fas fa-futbol"></i> Player Mining</h1>`;
+                document.getElementById('switchToPlayerBtn').classList.add('active');
+                document.getElementById('switchToManagerBtn').classList.remove('active');
+                ac.innerHTML = '<button class="action-btn" id="trainBtn"><i class="fas fa-dumbbell"></i> Train Player</button>';
                 document.getElementById('trainBtn').addEventListener('click', openTrainingScreen);
                 updateTrainingButton();
             } else {
-                roleHeader.innerHTML = `<div class="role-badge">👔 Manager Mode</div><h1><i class="fas fa-trophy"></i> Manager Mining</h1>`;
-                document.getElementById('switchToManagerBtn').classList.add('active'); document.getElementById('switchToPlayerBtn').classList.remove('active');
-                actionContainer.innerHTML = '';
+                rh.innerHTML = `<div class="role-badge" style="background:#ff333320;display:inline-block;padding:0.2rem 1rem;border-radius:40px;">👔 Manager Mode</div><h1><i class="fas fa-trophy"></i> Manager Mining</h1>`;
+                document.getElementById('switchToManagerBtn').classList.add('active');
+                document.getElementById('switchToPlayerBtn').classList.remove('active');
+                ac.innerHTML = '';
             }
             setStorage('last_active_role', role);
         }
-
         function updateTrainingButton() {
-            const trainBtn = document.getElementById('trainBtn');
-            if (trainBtn) {
-                trainBtn.disabled = !trainingEnabled;
-                if (!trainingEnabled) {
-                    trainBtn.innerHTML = '<i class="fas fa-ban"></i> Training Off';
-                    trainBtn.title = 'Training is currently disabled by admin';
-                } else {
-                    trainBtn.innerHTML = '<i class="fas fa-dumbbell"></i> Train Player';
-                    trainBtn.title = '';
-                }
-            }
+            const tb = document.getElementById('trainBtn');
+            if (!tb) return;
+            tb.disabled = !trainingEnabled;
+            tb.innerHTML = trainingEnabled ? '<i class="fas fa-dumbbell"></i> Train Player' : '<i class="fas fa-ban"></i> Training Off';
         }
-
         async function loadTrainingStatus() {
             try {
-                const statsDoc = await db.collection('global').doc('stats').get();
-                if (statsDoc.exists) {
-                    trainingEnabled = statsDoc.data().trainingEnabled !== false;
-                } else {
-                    trainingEnabled = true;
-                }
-            } catch(e) {
-                trainingEnabled = true;
-            }
+                const s = await db.collection('global').doc('stats').get();
+                trainingEnabled = s.exists ? (s.data().trainingEnabled !== false) : true;
+            } catch(e) { trainingEnabled = true; }
             updateTrainingButton();
         }
 
-        // ===================== WALLET FUNCTIONS =====================
-        async function sendCoin(toUsernameOrId, amount) {
+        // ===================== WALLET: SEND =====================
+        // ⛔ ONLY sender needs 800 $FOOT training spent. Recipient eligibility NOT required.
+        async function sendCoin(toInput, amount) {
             if (!currentUserId) throw new Error('Not logged in');
-            if (!toUsernameOrId || amount <= 0) throw new Error('Invalid recipient or amount');
-            if (toUsernameOrId === currentUserId || toUsernameOrId === getStorage('profile_username')) throw new Error('Cannot send to yourself');
+            if (!toInput || amount <= 0) throw new Error('Invalid recipient or amount');
+            // ⛔ Only the SENDER must be eligible
+            if (!trainingEligible) throw new Error(`You need to spend at least ${MIN_TRAINING_SPENT_FOR_SELLING} $FOOT on training to send $FOOT.`);
 
-            if (!trainingEligible) {
-                throw new Error(`You need to spend at least ${MIN_TRAINING_SPENT_FOR_SELLING} $FOOT on training to send $FOOT.`);
-            }
+            let recipientUid = null, recipientName = '';
+            if (toInput.startsWith('@')) {
+                const uname = toInput.substring(1).toLowerCase();
+                const uDoc = await db.collection('usernames').doc(uname).get();
+                if (!uDoc.exists) throw new Error('Username not found');
+                recipientUid = uDoc.data().uid;
+            } else recipientUid = toInput;
 
-            let recipientDoc;
-            if (toUsernameOrId.startsWith('@')) {
-                const username = toUsernameOrId.substring(1).toLowerCase();
-                const usernameDoc = await db.collection('usernames').doc(username).get();
-                if (!usernameDoc.exists) throw new Error('Username not found');
-                recipientDoc = await db.collection('users').doc(usernameDoc.data().uid).get();
-            } else {
-                recipientDoc = await db.collection('users').doc(toUsernameOrId).get();
-            }
-            if (!recipientDoc.exists) throw new Error('Recipient not found');
+            if (!recipientUid) throw new Error('Recipient not found');
+            if (recipientUid === currentUserId) throw new Error('Cannot send to yourself');
 
-            if (!recipientDoc.data().trainingEligible) {
-                throw new Error('Recipient is not eligible to receive $FOOT.');
-            }
+            const rDoc = await db.collection('users').doc(recipientUid).get();
+            if (!rDoc.exists) throw new Error('Recipient not found');
+            const rData = rDoc.data();
+            recipientName = rData.username || recipientUid.substring(0,8);
 
-            const recipientId = recipientDoc.id;
-            const senderRef = db.collection('users').doc(currentUserId);
-            const recipientRef = db.collection('users').doc(recipientId);
-            const transfersRef = db.collection('transfers');
+            // ✅ REMOVED: Recipient eligibility check.
+            // Anyone can receive $FOOT — even if they haven't trained.
 
-            try {
-                await db.runTransaction(async (transaction) => {
-                    const senderDoc = await transaction.get(senderRef);
-                    const recipientDocSnap = await transaction.get(recipientRef);
-                    if (!senderDoc.exists) throw new Error('Sender does not exist');
-                    if (!recipientDocSnap.exists) throw new Error('Recipient does not exist');
+            const userRef = db.collection('users').doc(currentUserId);
+            const transferRef = db.collection('transfers').doc();
 
-                    const senderBalance = senderDoc.data().balance || 0;
-                    if (senderBalance < amount) throw new Error('Insufficient balance');
-
-                    const newSenderBalance = senderBalance - amount;
-                    const newRecipientBalance = (recipientDocSnap.data().balance || 0) + amount;
-
-                    transaction.set(senderRef, { balance: newSenderBalance }, { merge: true });
-                    transaction.set(recipientRef, { balance: newRecipientBalance }, { merge: true });
-                    transaction.add(transfersRef, {
-                        from: currentUserId,
-                        to: recipientId,
-                        amount: amount,
-                        timestamp: firebase.firestore.FieldValue.serverTimestamp()
-                    });
-                    return newSenderBalance;
-                }).then((newBalance) => {
-                    setUserBalance(newBalance);
-                    updateWalletDisplay();
-                    showModal('Transfer Successful', `Sent ${amount} $FOOT to ${recipientDoc.data().username || recipientId}`);
-                    renderWalletHistory();
+            await db.runTransaction(async (t) => {
+                const uDoc = await t.get(userRef);
+                if (!uDoc.exists) throw new Error('User doc missing');
+                const bal = uDoc.data().balance || 0;
+                if (bal < amount) throw new Error('Insufficient balance');
+                t.update(userRef, { balance: bal - amount });
+                t.set(transferRef, {
+                    from: currentUserId,
+                    to: recipientUid,
+                    amount: amount,
+                    status: 'pending',
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
                 });
-            } catch (e) {
-                showModal('Transfer Failed', e.message);
-            }
+            });
+
+            setUserBalance(getUserBalance() - amount);
+            updateWalletDisplay();
+            showToast(`Sent ${amount} $FOOT to ${recipientName}`, 'success');
+            renderWalletHistory();
+        }
+
+        // ===================== WALLET: RECEIVE (auto-credit pending) =====================
+        // ✅ Anyone can receive — no eligibility check on receiver side.
+        async function processIncomingTransfers() {
+            if (!currentUserId) return;
+            try {
+                const snap = await db.collection('transfers')
+                    .where('to', '==', currentUserId)
+                    .where('status', '==', 'pending')
+                    .get();
+                if (snap.empty) return;
+                const userRef = db.collection('users').doc(currentUserId);
+                let credited = 0;
+                for (const doc of snap.docs) {
+                    const tr = doc.data();
+                    try {
+                        await db.runTransaction(async (t) => {
+                            const tRef = db.collection('transfers').doc(doc.id);
+                            const tDoc = await t.get(tRef);
+                            if (!tDoc.exists || tDoc.data().status !== 'pending') return;
+                            const uDoc = await t.get(userRef);
+                            if (!uDoc.exists) return;
+                            const newBal = (uDoc.data().balance || 0) + tDoc.data().amount;
+                            t.update(userRef, { balance: newBal });
+                            t.update(tRef, { status: 'completed', completedAt: firebase.firestore.FieldValue.serverTimestamp() });
+                        });
+                        credited += tr.amount;
+                    } catch(e) { console.error('Process transfer fail', doc.id, e); }
+                }
+                if (credited > 0) {
+                    const fresh = await db.collection('users').doc(currentUserId).get();
+                    setUserBalance(fresh.data().balance || 0);
+                    updateWalletDisplay();
+                    showToast(`You received ${credited.toFixed(2)} $FOOT!`, 'success');
+                }
+            } catch(e) { console.error('processIncomingTransfers failed', e); }
         }
 
         async function renderWalletHistory() {
             if (!currentUserId) return;
-            const historyContainer = document.getElementById('walletHistoryList');
-            historyContainer.innerHTML = '<p style="color:#ff8888;">Loading…</p>';
+            const c = document.getElementById('walletHistoryList');
+            c.innerHTML = '<p style="color:#ff8888;">Loading…</p>';
             try {
-                const transfersSnapshot = await db.collection('transfers')
-                    .where('from', '==', currentUserId)
-                    .orderBy('timestamp', 'desc')
-                    .limit(20)
-                    .get();
-                const transfersSnapshot2 = await db.collection('transfers')
-                    .where('to', '==', currentUserId)
-                    .orderBy('timestamp', 'desc')
-                    .limit(20)
-                    .get();
-
+                const snap1 = await db.collection('transfers').where('from', '==', currentUserId).limit(20).get();
+                const snap2 = await db.collection('transfers').where('to', '==', currentUserId).limit(20).get();
                 const transfers = [];
-                transfersSnapshot.forEach(doc => transfers.push({ id: doc.id, data: doc.data(), type: 'outgoing' }));
-                transfersSnapshot2.forEach(doc => transfers.push({ id: doc.id, data: doc.data(), type: 'incoming' }));
+                snap1.forEach(d => transfers.push({ id: d.id, data: d.data(), type: 'outgoing' }));
+                snap2.forEach(d => transfers.push({ id: d.id, data: d.data(), type: 'incoming' }));
                 transfers.sort((a,b) => (b.data.timestamp?.toMillis?.() || 0) - (a.data.timestamp?.toMillis?.() || 0));
-
-                if (transfers.length === 0) {
-                    historyContainer.innerHTML = '<p style="color:#ffcccc;">No transactions yet.</p>';
-                    return;
-                }
-
-                historyContainer.innerHTML = transfers.map(t => {
+                if (transfers.length === 0) { c.innerHTML = '<p style="color:#ffcccc;">No transactions yet.</p>'; return; }
+                c.innerHTML = transfers.map(t => {
                     const otherId = t.type === 'outgoing' ? t.data.to : t.data.from;
                     const amount = t.data.amount;
                     const date = t.data.timestamp ? new Date(t.data.timestamp.toMillis()).toLocaleString() : '—';
-                    const otherName = otherId === currentUserId ? 'You' : (otherId.substring(0,8) + '…');
+                    const other = otherId.substring(0,8) + '…';
                     const icon = t.type === 'outgoing' ? 'fa-arrow-up' : 'fa-arrow-down';
-                    const amountClass = t.type === 'outgoing' ? 'outgoing' : 'incoming';
+                    const cls = t.type === 'outgoing' ? 'outgoing' : 'incoming';
                     const sign = t.type === 'outgoing' ? '-' : '+';
+                    const statusNote = (t.type === 'incoming' && t.data.status === 'pending') ? ' (pending)' : '';
                     return `<div class="history-item">
                         <div class="history-icon"><i class="fas ${icon}"></i></div>
                         <div class="history-details">
-                            <div class="history-name">${t.type === 'outgoing' ? 'To: ' : 'From: '}${otherName}</div>
+                            <div class="history-name">${t.type === 'outgoing' ? 'To: ' : 'From: '}${other}${statusNote}</div>
                             <div class="history-date">${date}</div>
                         </div>
-                        <div class="history-amount ${amountClass}">${sign}${amount.toFixed(2)} $FOOT</div>
+                        <div class="history-amount ${cls}">${sign}${amount.toFixed(2)} $FOOT</div>
                     </div>`;
                 }).join('');
-            } catch (e) {
-                console.error('Error fetching history:', e);
-                historyContainer.innerHTML = '<p style="color:#ff8888;">Failed to load history.</p>';
-            }
+            } catch(e) { console.error(e); c.innerHTML = '<p style="color:#ff8888;">Failed to load.</p>'; }
         }
 
+        async function renderMyPurchases() {
+            if (!currentUserId) return;
+            const c = document.getElementById('myPurchasesList');
+            if (!c) return;
+            c.innerHTML = '<p style="color:#ff8888;">Loading…</p>';
+            try {
+                const snap = await db.collection('purchases').where('userId', '==', currentUserId).limit(30).get();
+                const arr = [];
+                snap.forEach(d => arr.push({ id: d.id, ...d.data() }));
+                arr.sort((a,b) => (b.createdAt?.toMillis?.() || 0) - (a.createdAt?.toMillis?.() || 0));
+                if (arr.length === 0) { c.innerHTML = '<p style="color:#ffcccc;">No purchases yet.</p>'; return; }
+                c.innerHTML = arr.map(p => {
+                    const date = p.createdAt ? new Date(p.createdAt.toMillis()).toLocaleString() : '—';
+                    const amountTxt = p.amountUSDT ? `${p.amountUSDT} USDT` : 'Amount not specified';
+                    const footTxt = p.amountFoot ? `→ ${p.amountFoot.toFixed(2)} $FOOT` : '';
+                    const cls = p.status || 'pending';
+                    const hash = p.txHash ? (p.txHash.substring(0,10) + '…' + p.txHash.slice(-6)) : '—';
+                    return `<div class="history-item">
+                        <div class="history-icon"><i class="fas fa-shopping-cart"></i></div>
+                        <div class="history-details">
+                            <div class="history-name">${amountTxt} ${footTxt}</div>
+                            <div class="history-date">${date}</div>
+                            <div class="history-date" style="font-family:monospace;">Tx: ${hash}</div>
+                        </div>
+                        <div><span class="purchase-status-badge ${cls}">${p.status}</span></div>
+                    </div>`;
+                }).join('');
+            } catch(e) { c.innerHTML = '<p style="color:#ff8888;">Failed to load.</p>'; }
+        }
+
+        // ===================== SEND MODAL (sender eligibility gated) =====================
         function openSendModal() {
-            if (!trainingEligible) {
-                showModal('Not Eligible', `You need to spend at least ${MIN_TRAINING_SPENT_FOR_SELLING} $FOOT on training to send $FOOT.`);
-                return;
-            }
+            if (!trainingEligible) { showToast(`Need ${MIN_TRAINING_SPENT_FOR_SELLING} $FOOT spent on training to send`, 'error'); return; }
             customModalBox.innerHTML = `
                 <h3 style="color:#ffaaaa;">Send $FOOT</h3>
                 <div class="send-form">
-                    <label>Recipient (Username or UID)</label>
+                    <label>Recipient (Username with @, or UID)</label>
                     <input type="text" id="sendRecipient" placeholder="e.g., @john or UID">
                     <label>Amount</label>
                     <input type="number" id="sendAmount" min="0.01" step="0.01" placeholder="0.00">
                     <button class="action-btn" id="sendConfirmBtn" style="margin-top:1rem;">Send</button>
                     <button class="action-btn" style="background:#333; margin-top:0.5rem;" id="sendCloseBtn">Close</button>
-                </div>
-            `;
+                </div>`;
             customModal.classList.add('active');
             document.getElementById('sendConfirmBtn').addEventListener('click', async () => {
-                const recipient = document.getElementById('sendRecipient').value.trim();
-                const amount = parseFloat(document.getElementById('sendAmount').value);
-                if (!recipient || isNaN(amount) || amount <= 0) {
-                    showModal('Invalid Input', 'Please enter a valid recipient and amount.');
-                    return;
-                }
+                const r = document.getElementById('sendRecipient').value.trim();
+                const a = parseFloat(document.getElementById('sendAmount').value);
+                if (!r || isNaN(a) || a <= 0) { showToast('Enter valid recipient and amount', 'error'); return; }
                 customModal.classList.remove('active');
-                await sendCoin(recipient, amount);
+                try { await sendCoin(r, a); } catch(e) { showToast('Transfer failed: ' + e.message, 'error'); }
             });
-            document.getElementById('sendCloseBtn').addEventListener('click', () => {
-                customModal.classList.remove('active');
-            });
+            document.getElementById('sendCloseBtn').addEventListener('click', () => customModal.classList.remove('active'));
         }
 
         function openReceiveModal() {
             customModalBox.innerHTML = `
                 <h3 style="color:#ffaaaa;">Receive $FOOT</h3>
-                <p style="color:#ffcccc; margin:1rem 0;">Share your User ID or Username to receive funds.</p>
+                <p style="color:#ffcccc; margin:1rem 0;">Share your User ID or Username to receive funds. Anyone can send you $FOOT.</p>
                 <div class="static-value" style="margin-bottom:1rem;">
                     <strong>User ID:</strong><br>
                     <span class="copyable-text" id="receiveUserId">${currentUserId}</span>
@@ -1227,422 +1009,143 @@
                     <strong>Username:</strong><br>
                     <span class="copyable-text">${getStorage('profile_username') || 'Not set'}</span>
                 </div>
-                <button class="action-btn" onclick="document.getElementById('customModalOverlay').classList.remove('active')">Close</button>
-            `;
+                <button class="action-btn" onclick="document.getElementById('customModalOverlay').classList.remove('active')">Close</button>`;
             customModal.classList.add('active');
             document.getElementById('copyReceiveIdBtn').addEventListener('click', () => {
                 copyToClipboard(currentUserId);
-                showModal('Copied', 'User ID copied to clipboard.');
+                showToast('User ID copied!', 'success');
             });
         }
 
-        // ===================== MARKETPLACE FUNCTIONS =====================
-        async function fetchEscrowSettings() {
-            try {
-                const doc = await db.collection('global').doc('escrowSettings').get();
-                if (doc.exists) {
-                    return doc.data();
-                } else {
-                    return { footPriceUsdt: FOOT_PRICE_USDT, escrowAddress: ESCROW_ADDRESS, network: ESCROW_NETWORK };
-                }
-            } catch (e) {
-                console.error('Error fetching escrow settings:', e);
-                return { footPriceUsdt: FOOT_PRICE_USDT, escrowAddress: ESCROW_ADDRESS, network: ESCROW_NETWORK };
-            }
-        }
-
-        async function createSellOrder(amountFoot, sellerExternalWallet) {
-            if (!currentUserId) return;
-            if (!trainingEligible) {
-                showModal('Not Eligible', `You need to spend at least ${MIN_TRAINING_SPENT_FOR_SELLING} $FOOT on training to sell.`);
-                return;
-            }
-            if (amountFoot <= 0 || !sellerExternalWallet) {
-                showModal('Invalid Input', 'Amount and wallet address are required.');
-                return;
-            }
-
-            const escrowSettings = await fetchEscrowSettings();
-            const totalUsdt = amountFoot * escrowSettings.footPriceUsdt;
-
-            const listingRef = db.collection('listings').doc();
-            try {
-                await listingRef.set({
-                    sellerUid: currentUserId,
-                    amountFoot: amountFoot,
-                    pricePerFoot: escrowSettings.footPriceUsdt,
-                    totalUsdt: totalUsdt,
-                    escrowAddress: escrowSettings.escrowAddress || ESCROW_ADDRESS,
-                    network: 'Polygon', // fixed
-                    sellerExternalWallet: sellerExternalWallet,
-                    status: 'pending_approval',
-                    buyerUid: null,
-                    buyerDetails: null,
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
-                showModal('Listing Submitted', 'Your sell order is pending admin approval. Once approved, your $FOOT will be locked.');
-                loadMarketplace();
-            } catch (e) {
-                showModal('Failed to create listing', e.message);
-            }
-        }
-
-        async function buyListing(listingId) {
-            if (!currentUserId) return;
-            try {
-                const listingDoc = await db.collection('listings').doc(listingId).get();
-                if (!listingDoc.exists) throw new Error('Listing not found');
-                const listing = listingDoc.data();
-                if (listing.status !== 'open') throw new Error('Listing is not open');
-                if (listing.sellerUid === currentUserId) throw new Error('You cannot buy your own listing');
-                openBuyerDetailsModal(listingId, listing);
-            } catch (e) {
-                showModal('Purchase failed', e.message);
-            }
-        }
-
-        function openBuyerDetailsModal(listingId, listing) {
+        // ===================== BUY $FOOT (NO ELIGIBILITY CHECK) =====================
+        // ✅ Anyone (eligible or not) can buy $FOOT from us.
+        function openBuyModal() {
             customModalBox.innerHTML = `
-                <h3 style="color:#ffaaaa;">Buy ${listing.amountFoot} $FOOT</h3>
-                <p style="color:#ffcccc;">Total cost: ${listing.totalUsdt.toFixed(2)} USDT (Polygon)</p>
-                <div class="send-form">
-                    <label>Your Name</label>
-                    <input type="text" id="buyerName" placeholder="Full name">
-                    <label>Your Email</label>
-                    <input type="email" id="buyerEmail" placeholder="Email address">
-                    <label>Your Polygon (USDT) wallet address (for refunds)</label>
-                    <input type="text" id="buyerWallet" placeholder="Your USDT wallet address">
-                    <p style="color:#ffcccc; font-size:0.8rem;">Send ${listing.totalUsdt.toFixed(2)} USDT to this escrow address:</p>
-                    <div class="static-value">
-                        <span id="escrowAddressText">${listing.escrowAddress}</span>
-                        <button class="copy-address-btn" id="copyAddressBtn" title="Copy address"><i class="fas fa-copy"></i></button>
-                    </div>
-                    <p style="color:#ffcccc; font-size:0.8rem;">Network: Polygon</p>
-                    <button class="action-btn" id="confirmBuyBtn">Confirm Purchase</button>
-                    <button class="action-btn" style="background:#333; margin-top:0.5rem;" id="buyCloseBtn">Close</button>
+                <h3 style="color:#ffaaaa;">Buy $FOOT</h3>
+                <p style="color:#ffcccc;">Price: <strong>${FOOT_BUY_PRICE_USDT} USDT</strong> per 1 $FOOT</p>
+                <p style="color:#ffcccc; font-size:0.85rem; margin-top:0.5rem;">Send USDT on <strong>${DEPOSIT_NETWORK}</strong> to:</p>
+                <div class="static-value" style="margin:0.5rem 0;">
+                    <span class="copyable-text" style="font-family:monospace; font-size:0.75rem;">${DEPOSIT_ADDRESS}</span>
+                    <button id="copyDepositAddrBtn" class="copy-id-btn" title="Copy address"><i class="fas fa-copy"></i></button>
                 </div>
-            `;
+                <p style="color:#ff8888; font-size:0.8rem;">⚠️ Only send USDT on Polygon. Other networks will be lost.</p>
+                <div class="send-form" style="text-align:left;">
+                    <label>USDT amount you sent <span class="required-star">*</span></label>
+                    <input type="number" id="buyAmountUSDT" min="0.05" step="0.01" placeholder="e.g., 10" required>
+                    <label>Transaction hash <span class="required-star">*</span></label>
+                    <input type="text" id="buyTxHash" placeholder="0x..." required>
+                    <p style="color:#ffd700; margin-top:0.5rem;">You will receive: <strong id="buyFootPreview">0.00</strong> $FOOT</p>
+                    <button class="action-btn" id="buyConfirmBtn">Submit Purchase Request</button>
+                    <button class="action-btn" style="background:#333; margin-top:0.5rem;" id="buyCloseBtn">Close</button>
+                </div>`;
             customModal.classList.add('active');
-            document.getElementById('copyAddressBtn').addEventListener('click', () => {
-                const address = document.getElementById('escrowAddressText').textContent.trim();
-                copyToClipboard(address).then(success => {
-                    if (success) {
-                        showModal('Copied', 'Address copied to clipboard.');
-                    } else {
-                        alert('Copy failed. Please copy manually.');
-                    }
+
+            document.getElementById('copyDepositAddrBtn').addEventListener('click', () => {
+                copyToClipboard(DEPOSIT_ADDRESS).then(ok => {
+                    if (ok) showToast('Deposit address copied!', 'success');
+                    else showToast('Copy failed — long-press to copy manually', 'error');
                 });
             });
-            document.getElementById('confirmBuyBtn').addEventListener('click', async () => {
-                const name = document.getElementById('buyerName').value.trim();
-                const email = document.getElementById('buyerEmail').value.trim();
-                const wallet = document.getElementById('buyerWallet').value.trim();
-                if (!name || !email || !wallet) {
-                    alert('Please fill all fields.');
+
+            const amt = document.getElementById('buyAmountUSDT');
+            amt.addEventListener('input', () => {
+                const u = parseFloat(amt.value) || 0;
+                document.getElementById('buyFootPreview').innerText = (u / FOOT_BUY_PRICE_USDT).toFixed(2);
+            });
+
+            document.getElementById('buyConfirmBtn').addEventListener('click', async () => {
+                const usdt = parseFloat(document.getElementById('buyAmountUSDT').value);
+                const hash = document.getElementById('buyTxHash').value.trim();
+
+                if (!usdt || isNaN(usdt) || usdt <= 0) {
+                    showToast('Please enter the USDT amount you sent', 'error');
+                    document.getElementById('buyAmountUSDT').focus();
                     return;
                 }
-                customModal.classList.remove('active');
-                await completePurchase(listingId, { name, email, wallet });
-            });
-            document.getElementById('buyCloseBtn').addEventListener('click', () => {
-                customModal.classList.remove('active');
-            });
-        }
+                if (!hash || hash.length < 20) {
+                    showToast('Transaction hash is required', 'error');
+                    document.getElementById('buyTxHash').focus();
+                    return;
+                }
+                if (!hash.toLowerCase().startsWith('0x')) {
+                    showToast('Polygon hashes must start with 0x', 'error');
+                    return;
+                }
 
-        async function completePurchase(listingId, buyerDetails) {
-            try {
-                const escrowQuery = await db.collection('escrow')
-                    .where('listingId', '==', listingId)
-                    .get();
-                if (escrowQuery.empty) throw new Error('Escrow record not found');
-                const escrowDocRef = escrowQuery.docs[0].ref;
-
-                await db.runTransaction(async (transaction) => {
-                    const listingRef = db.collection('listings').doc(listingId);
-                    const listingDoc = await transaction.get(listingRef);
-                    if (!listingDoc.exists) throw new Error('Listing not found');
-                    const listing = listingDoc.data();
-                    if (listing.status !== 'open') throw new Error('Listing no longer available');
-
-                    transaction.update(listingRef, {
+                try {
+                    await db.collection('purchases').add({
+                        userId: currentUserId,
+                        username: getStorage('profile_username') || '',
+                        txHash: hash,
+                        amountUSDT: usdt,
                         status: 'pending',
-                        buyerUid: currentUserId,
-                        buyerDetails: buyerDetails,
-                        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
                     });
-                    transaction.update(escrowDocRef, {
-                        status: 'pending',
-                        buyerUid: currentUserId,
-                        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-                    });
-                });
-                showModal('Purchase Initiated', 'Please send the USDT and then submit the transaction hash in "My Listings & Purchases".');
-                loadMarketplace();
-            } catch (e) {
-                showModal('Purchase failed', e.message);
-            }
-        }
-
-        async function cancelListing(listingId) {
-            if (!currentUserId) return;
-            try {
-                await db.runTransaction(async (transaction) => {
-                    const listingRef = db.collection('listings').doc(listingId);
-                    const listingDoc = await transaction.get(listingRef);
-                    if (!listingDoc.exists) throw new Error('Listing not found');
-                    const listing = listingDoc.data();
-                    if (listing.sellerUid !== currentUserId) throw new Error('Not your listing');
-                    if (listing.status !== 'pending_approval' && listing.status !== 'open') throw new Error('Cannot cancel at this stage');
-
-                    if (listing.status === 'pending_approval') {
-                        transaction.update(listingRef, { status: 'cancelled', updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
-                    } else if (listing.status === 'open') {
-                        const escrowQuery = await db.collection('escrow').where('listingId', '==', listingId).get();
-                        if (escrowQuery.empty) throw new Error('Escrow not found');
-                        const escrowDocRef = escrowQuery.docs[0].ref;
-                        const escrowDoc = escrowQuery.docs[0].data();
-
-                        const sellerRef = db.collection('users').doc(listing.sellerUid);
-                        const sellerDoc = await transaction.get(sellerRef);
-                        if (!sellerDoc.exists) throw new Error('Seller not found');
-                        const newBalance = (sellerDoc.data().balance || 0) + escrowDoc.amountFoot;
-
-                        transaction.update(listingRef, { status: 'cancelled', updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
-                        transaction.update(escrowDocRef, { status: 'refunded', updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
-                        transaction.set(sellerRef, { balance: newBalance }, { merge: true });
-                    }
-                });
-
-                const userDoc = await db.collection('users').doc(currentUserId).get();
-                setUserBalance(userDoc.data().balance || 0);
-                updateWalletDisplay();
-                showModal('Listing Cancelled', 'Your $FOOT has been returned (if it was locked).');
-                loadMarketplace();
-            } catch (e) {
-                showModal('Cancel failed', e.message);
-            }
-        }
-
-        async function submitTransactionHash(escrowId, hash) {
-            if (!currentUserId) return;
-            if (!hash) { showModal('Missing Hash', 'Please enter the transaction hash.'); return; }
-            try {
-                await db.collection('escrow').doc(escrowId).update({
-                    transactionHash: hash,
-                    status: 'awaiting_review',
-                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
-                showModal('Hash Submitted', 'Your payment is now awaiting admin verification.');
-                loadMarketplace();
-            } catch (e) {
-                showModal('Submission Failed', e.message);
-            }
-        }
-
-        async function loadMarketplace() {
-            if (!currentUserId) return;
-
-            const openListingsContainer = document.getElementById('openListingsContainer');
-            openListingsContainer.innerHTML = '<p style="color:#ff8888;">Loading…</p>';
-            try {
-                const openListingsSnap = await db.collection('listings')
-                    .where('status', '==', 'open')
-                    .get();
-                const openListings = [];
-                openListingsSnap.forEach(doc => openListings.push({ id: doc.id, ...doc.data() }));
-                openListings.sort((a,b) => (b.createdAt?.toMillis?.() || 0) - (a.createdAt?.toMillis?.() || 0));
-
-                openListingsContainer.innerHTML = '';
-                if (openListings.length === 0) {
-                    openListingsContainer.innerHTML = '<p style="color:#ffcccc;">No open listings.</p>';
-                } else {
-                    openListings.forEach(listing => {
-                        const div = document.createElement('div');
-                        div.className = 'listing-card';
-                        div.innerHTML = `
-                            <div class="listing-info">
-                                <div class="listing-amount">${listing.amountFoot} $FOOT</div>
-                                <div class="listing-price">Price: ${listing.pricePerFoot.toFixed(2)} USDT per $FOOT</div>
-                                <div class="listing-total">Total: ${listing.totalUsdt.toFixed(2)} USDT</div>
-                                <div style="font-size:0.8rem;color:#ffaaaa;">Seller: ${listing.sellerUid.substring(0,8)}…</div>
-                                <div style="font-size:0.8rem;color:#ffcccc;">Network: ${listing.network || ESCROW_NETWORK}</div>
-                            </div>
-                            <button class="buy-btn" data-id="${listing.id}">Buy</button>
-                        `;
-                        openListingsContainer.appendChild(div);
-                    });
-                }
-            } catch (e) {
-                console.error('Error loading open listings:', e);
-                openListingsContainer.innerHTML = '<p style="color:#ff8888;">Failed to load.</p>';
-            }
-
-            const myListingsContainer = document.getElementById('myListingsContainer');
-            myListingsContainer.innerHTML = '<p style="color:#ff8888;">Loading…</p>';
-            try {
-                const myListingsSnap = await db.collection('listings')
-                    .where('sellerUid', '==', currentUserId)
-                    .get();
-                const myPurchasesSnap = await db.collection('listings')
-                    .where('buyerUid', '==', currentUserId)
-                    .get();
-
-                const combined = [];
-                myListingsSnap.forEach(doc => combined.push({ id: doc.id, data: doc.data(), role: 'seller' }));
-                myPurchasesSnap.forEach(doc => combined.push({ id: doc.id, data: doc.data(), role: 'buyer' }));
-                combined.sort((a,b) => (b.data.createdAt?.toMillis?.() || 0) - (a.data.createdAt?.toMillis?.() || 0));
-
-                myListingsContainer.innerHTML = '';
-                if (combined.length === 0) {
-                    myListingsContainer.innerHTML = '<p style="color:#ffcccc;">No listings or purchases.</p>';
-                } else {
-                    combined.forEach(item => {
-                        const listing = item.data;
-                        const div = document.createElement('div');
-                        div.className = 'listing-card';
-                        let actionHTML = '';
-                        if (item.role === 'seller') {
-                            if (listing.status === 'pending_approval') {
-                                actionHTML = '<span class="pending-label">Pending approval</span>';
-                            } else if (listing.status === 'open') {
-                                actionHTML = `<button class="cancel-btn" data-id="${item.id}">Cancel</button>`;
-                            } else if (listing.status === 'pending') {
-                                actionHTML = '<span class="pending-label">Awaiting payment</span>';
-                            } else if (listing.status === 'completed') {
-                                actionHTML = '<span style="color:#00cc00;">Completed</span>';
-                            } else {
-                                actionHTML = listing.status;
-                            }
-                        } else if (item.role === 'buyer') {
-                            if (listing.status === 'pending') {
-                                actionHTML = `<button class="action-btn hash-btn" data-id="${item.id}">Submit Hash</button>`;
-                            } else {
-                                actionHTML = listing.status;
-                            }
-                        }
-                        div.innerHTML = `
-                            <div class="listing-info">
-                                <div class="listing-amount">${listing.amountFoot} $FOOT</div>
-                                <div class="listing-price">Price: ${listing.pricePerFoot.toFixed(2)} USDT</div>
-                                <div class="listing-total">Total: ${listing.totalUsdt.toFixed(2)} USDT</div>
-                                <div style="font-size:0.8rem;color:#ffaaaa;">Status: ${listing.status} ${item.role === 'seller' ? '(Selling)' : '(Buying)'}</div>
-                                ${listing.escrowAddress ? `<div style="font-size:0.8rem;color:#ffcccc;">Escrow Address (${listing.network || ESCROW_NETWORK}): ${listing.escrowAddress}</div>` : ''}
-                                ${listing.sellerExternalWallet && item.role === 'seller' ? `<div style="font-size:0.8rem;color:#ffcccc;">Your payout wallet: ${listing.sellerExternalWallet}</div>` : ''}
-                            </div>
-                            ${actionHTML}
-                        `;
-                        myListingsContainer.appendChild(div);
-                    });
-                }
-            } catch (e) {
-                console.error('Error loading my listings:', e);
-                myListingsContainer.innerHTML = '<p style="color:#ff8888;">Failed to load.</p>';
-            }
-
-            try {
-                const lockedSnap = await db.collection('escrow')
-                    .where('sellerUid', '==', currentUserId)
-                    .where('status', 'in', ['locked','pending'])
-                    .get();
-                let lockedTotal = 0;
-                lockedSnap.forEach(doc => lockedTotal += doc.data().amountFoot || 0);
-                document.getElementById('lockedAmount').innerText = lockedTotal.toFixed(2);
-            } catch (e) {
-                console.error('Error loading locked balance:', e);
-            }
-        }
-
-        function openHashModal(listingId) {
-            db.collection('escrow').where('listingId', '==', listingId).get().then(snap => {
-                if (!snap.empty) {
-                    const escrowId = snap.docs[0].id;
-                    customModalBox.innerHTML = `
-                        <h3 style="color:#ffaaaa;">Submit Transaction Hash</h3>
-                        <p style="color:#ffcccc;">Enter the USDT transaction hash from your wallet/exchange.</p>
-                        <input type="text" id="hashInput" placeholder="Transaction hash (TXID)" style="width:100%; padding:0.7rem; border-radius:30px; border:1px solid #ff5555; background:rgba(0,0,0,0.5); color:white; margin:0.8rem 0;">
-                        <button class="action-btn" id="submitHashBtn">Submit</button>
-                        <button class="action-btn" style="background:#333; margin-top:0.5rem;" id="hashCloseBtn">Close</button>
-                    `;
-                    customModal.classList.add('active');
-                    document.getElementById('submitHashBtn').addEventListener('click', () => {
-                        const hash = document.getElementById('hashInput').value.trim();
-                        customModal.classList.remove('active');
-                        submitTransactionHash(escrowId, hash);
-                    });
-                    document.getElementById('hashCloseBtn').addEventListener('click', () => {
-                        customModal.classList.remove('active');
-                    });
-                }
+                    customModal.classList.remove('active');
+                    showToast('Purchase submitted — pending admin review', 'success');
+                    renderMyPurchases();
+                } catch(e) { showToast('Submission failed: ' + e.message, 'error'); }
             });
+            document.getElementById('buyCloseBtn').addEventListener('click', () => customModal.classList.remove('active'));
         }
 
-        // ===================== INIT =====================
         async function initApp(user) {
             currentUserId = user.uid;
             if (!getStorage(REF_CODE_V2_KEY)) { const code = secureRandomHex12(); setStorage(REF_CODE_V2_KEY, code); }
             currentReferralCode = getStorage(REF_CODE_V2_KEY);
             const userData = await loadUserFromFirestore(user.uid);
 
-            if (!userData || !userData.username) {
-                await promptForUsername();
-            } else {
-                setStorage('profile_username', userData.username);
-                document.getElementById('usernameDisplay').innerText = userData.username;
-            }
+            if (!userData || !userData.username) await promptForUsername();
+            else { setStorage('profile_username', userData.username); document.getElementById('usernameDisplay').innerText = userData.username; }
 
             await saveUserToFirestore();
             await loadTrainingStatus();
-
             updateMiningStats();
             updateCircularTimer();
-            const lastRole = getStorage('last_active_role') || 'player';
-            setUIRole(lastRole);
-
+            setUIRole(getStorage('last_active_role') || 'player');
             refreshReferralBadge();
             await attemptAutoReferral();
+            await processIncomingTransfers();
 
             const summaries = [
-                { text: "Rental system" },
-                { text: "Train player" },
-                { text: "How you earn" },
-                { text: "Tournaments" },
-                { text: "League system" },
-                { text: "Knowledge challenge" },
-                { text: "Virtual Card" },
-                { text: "Football Academy" },
-                { text: "METAFOOT game" },
-                { text: "📲 Download the METAFOOT App", link: APK_DOWNLOAD_URL, linkText: "Get the APK" }
+                "Rental system", "Train player", "How you earn", "Tournaments",
+                "League system", "Knowledge challenge", "Virtual Card", "Football Academy",
+                "METAFOOT game"
             ];
             let slideSeq = [], currentSlide = 0, slideTimeout, countdownInterval;
             function buildSlides() {
-                slideSeq = summaries.map((s,i)=>({ text:`${i+1}. ${s.text}`, link: s.link, linkText: s.linkText }));
-                document.getElementById('slideshowWrapper').innerHTML = slideSeq.map(s => {
-                    let linkHTML = '';
-                    if (s.link) {
-                        linkHTML = `<a href="${s.link}" target="_blank" class="slideshow-link">${s.linkText || 'Open'}</a>`;
-                    }
-                    return `<div class="slideshow-slide"><div class="slideshow-title">⚽ METAFOOT</div><div class="slideshow-text">${s.text}</div>${linkHTML}</div>`;
-                }).join('');
+                slideSeq = summaries.map((s,i)=>({ text:`${i+1}. ${s}` }));
+                document.getElementById('slideshowWrapper').innerHTML = slideSeq.map(s =>
+                    `<div class="slideshow-slide"><div class="slideshow-title">⚽ METAFOOT</div><div class="slideshow-text">${s.text}</div></div>`
+                ).join('');
                 document.getElementById('slideshowWrapper').style.transform = 'translateX(0%)';
             }
             function nextSlide() { currentSlide = (currentSlide+1) % slideSeq.length; document.getElementById('slideshowWrapper').style.transform = `translateX(-${currentSlide*100}%)`; resetTimer(); }
-            function resetTimer() { clearTimeout(slideTimeout); clearInterval(countdownInterval); let t=40; document.getElementById('slideshowTimer').innerText = `Next slide in ${t}s`; countdownInterval = setInterval(()=>{ t--; if(t>=0) document.getElementById('slideshowTimer').innerText = `Next slide in ${t}s`; },1000); slideTimeout = setTimeout(()=>{ clearInterval(countdownInterval); nextSlide(); },40000); }
+            function resetTimer() {
+                clearTimeout(slideTimeout); clearInterval(countdownInterval);
+                let t=40; document.getElementById('slideshowTimer').innerText = `Next slide in ${t}s`;
+                countdownInterval = setInterval(()=>{ t--; if(t>=0) document.getElementById('slideshowTimer').innerText = `Next slide in ${t}s`; },1000);
+                slideTimeout = setTimeout(()=>{ clearInterval(countdownInterval); nextSlide(); },40000);
+            }
             buildSlides(); resetTimer();
 
-            document.getElementById('slideshowContainer').addEventListener('click', () => {
-                const slide = slideSeq[currentSlide];
-                if (slide.link) {
-                    window.open(slide.link, '_blank');
-                }
-            });
-
             document.getElementById('navHome').addEventListener('click', () => showScreen('miningScreen'));
-            document.getElementById('navReferral').addEventListener('click', async () => { showScreen('referralScreen'); document.getElementById('refCodeDisplay').textContent = currentReferralCode; refreshReferralBadge(); await loadReferralStats(); });
+            document.getElementById('navReferral').addEventListener('click', async () => {
+                showScreen('referralScreen');
+                document.getElementById('refCodeDisplay').textContent = currentReferralCode;
+                refreshReferralBadge();
+                await loadReferralStats();
+            });
             document.getElementById('navTask').addEventListener('click', () => { showScreen('taskScreen'); renderTasks(); });
-            document.getElementById('navMarketplace').addEventListener('click', () => { showScreen('marketplaceScreen'); loadMarketplace(); });
-            document.getElementById('navWallet').addEventListener('click', () => { showScreen('walletScreen'); updateWalletDisplay(); renderWalletHistory(); });
+            document.getElementById('navWallet').addEventListener('click', async () => {
+                showScreen('walletScreen');
+                updateWalletDisplay();
+                await processIncomingTransfers();
+                renderWalletHistory();
+                renderMyPurchases();
+            });
             document.getElementById('navEcosystem').addEventListener('click', () => showScreen('ecosystemScreen'));
+
             document.querySelector('[data-action="profile"]').addEventListener('click', () => {
                 document.getElementById('sideMenu').classList.remove('open'); document.getElementById('menuOverlay').classList.remove('active');
                 document.getElementById('profileUserId').textContent = currentUserId;
@@ -1654,8 +1157,8 @@
             document.querySelector('[data-action="airdropDashboard"]').addEventListener('click', async () => {
                 document.getElementById('sideMenu').classList.remove('open'); document.getElementById('menuOverlay').classList.remove('active');
                 showScreen('airdropDashboardScreen');
-                const doc = await db.collection('global').doc('stats').get();
-                const data = doc.exists ? doc.data() : { totalDistributed:0 };
+                const d = await db.collection('global').doc('stats').get();
+                const data = d.exists ? d.data() : { totalDistributed:0 };
                 const mined = data.totalDistributed || 0;
                 document.getElementById('dashboardMinedPremium').innerText = mined.toLocaleString();
                 document.getElementById('dashboardPercentPremium').innerText = `(${((mined/TOTAL_AIRDROP_CAP)*100).toFixed(2)}% distributed)`;
@@ -1664,71 +1167,43 @@
                 document.getElementById('sideMenu').classList.remove('open'); document.getElementById('menuOverlay').classList.remove('active');
                 showScreen('halvingScreen');
                 const th = [0,15000,100000,500000,1000000], r = [4,2,1,0.5,0.25];
-                document.getElementById('halvingChartContainer').innerHTML = th.map((t,i) => `<div class="chart-row"><div class="chart-label">${t===0?'0':t>=1e6?'1M':(t/1000).toFixed(0)+'k'}</div><div class="chart-bar-container"><div class="chart-bar" style="width:${(r[i]/4)*100}%;"></div></div><div class="chart-value">${r[i]} $FOOT</div></div>`).join('');
+                document.getElementById('halvingChartContainer').innerHTML = th.map((t,i) =>
+                    `<div class="chart-row"><div class="chart-label">${t===0?'0':t>=1e6?'1M':(t/1000).toFixed(0)+'k'}</div><div class="chart-bar-container"><div class="chart-bar" style="width:${(r[i]/4)*100}%;"></div></div><div class="chart-value">${r[i]} $FOOT</div></div>`
+                ).join('');
             });
+            document.getElementById('backFromDashboardBtn').addEventListener('click', () => showScreen('miningScreen'));
+            document.getElementById('backFromHalvingBtn').addEventListener('click', () => showScreen('miningScreen'));
+            document.getElementById('backFromTrainingBtn').addEventListener('click', () => showScreen('miningScreen'));
             document.getElementById('switchToPlayerBtn').addEventListener('click', () => setUIRole('player'));
             document.getElementById('switchToManagerBtn').addEventListener('click', () => setUIRole('manager'));
             document.getElementById('sendCoinBtn').addEventListener('click', openSendModal);
             document.getElementById('receiveCoinBtn').addEventListener('click', openReceiveModal);
-            document.getElementById('createListingBtn').addEventListener('click', () => {
-                if (!trainingEligible) {
-                    showModal('Not Eligible', `You need to spend at least ${MIN_TRAINING_SPENT_FOR_SELLING} $FOOT on training to sell.`);
-                    return;
-                }
-                customModalBox.innerHTML = `
-                    <h3 style="color:#ffaaaa;">Sell $FOOT</h3>
-                    <p style="color:#ffcccc;">Fixed price: ${FOOT_PRICE_USDT} USDT per $FOOT</p>
-                    <label>Amount of $FOOT to sell</label>
-                    <input type="number" id="sellAmountInput" min="1" step="1" placeholder="Enter amount">
-                    <label>Your Polygon (USDT) wallet address – must be on Polygon network</label>
-                    <input type="text" id="sellerWalletInput" placeholder="Paste your wallet address">
-                    <p>Total you will receive: <span id="totalUsdtPreview">0.00</span> USDT</p>
-                    <button class="action-btn" id="confirmSellBtn">Submit for Approval</button>
-                    <button class="action-btn" style="background:#333; margin-top:0.5rem;" id="sellCloseBtn">Close</button>
-                `;
-                customModal.classList.add('active');
-                const amountInput = document.getElementById('sellAmountInput');
-                amountInput.addEventListener('input', () => {
-                    const amt = parseFloat(amountInput.value) || 0;
-                    document.getElementById('totalUsdtPreview').innerText = (amt * FOOT_PRICE_USDT).toFixed(2);
-                });
-                document.getElementById('confirmSellBtn').addEventListener('click', () => {
-                    const amount = parseFloat(amountInput.value);
-                    const wallet = document.getElementById('sellerWalletInput').value.trim();
-                    if (isNaN(amount) || amount <= 0 || !wallet) {
-                        showModal('Invalid', 'Enter amount and wallet address.');
-                        return;
-                    }
-                    customModal.classList.remove('active');
-                    createSellOrder(amount, wallet);
-                });
-                document.getElementById('sellCloseBtn').addEventListener('click', () => {
-                    customModal.classList.remove('active');
-                });
-            });
+            document.getElementById('buyFootBtn').addEventListener('click', openBuyModal);
+            document.getElementById('claimCircleBtn').addEventListener('click', claimRewardFirestore);
 
             document.getElementById('saveProfileBtn').addEventListener('click', async () => {
-                const newUsername = document.getElementById('profileUsername').value.trim();
-                if (!newUsername || newUsername.length < 3 || newUsername.length > 20 || !/^[a-zA-Z0-9_]+$/.test(newUsername)) {
-                    showModal('Invalid username', 'Username must be 3-20 chars (letters, numbers, underscores only).');
-                    return;
-                }
-                const oldUsername = getStorage('profile_username');
-                if (newUsername !== oldUsername) {
-                    const changed = await changeUsername(newUsername);
-                    if (!changed) return;
-                }
-                saveUserToFirestore();
-                showModal('Saved', 'Profile updated.');
+                const newU = document.getElementById('profileUsername').value.trim();
+                if (!newU || newU.length < 3 || newU.length > 20 || !/^[a-zA-Z0-9_]+$/.test(newU)) { showToast('Invalid username', 'error'); return; }
+                const oldU = getStorage('profile_username');
+                if (newU !== oldU) { const ok = await changeUsername(newU); if (!ok) return; }
+                await saveUserToFirestore();
+                showToast('Profile updated', 'success');
             });
             document.getElementById('revealProfileIdBtn').addEventListener('click', () => document.getElementById('profileUserId').classList.toggle('blurred'));
-            document.getElementById('copyProfileIdBtn').addEventListener('click', () => { navigator.clipboard.writeText(currentUserId); alert('User ID copied!'); });
+            document.getElementById('copyProfileIdBtn').addEventListener('click', () => {
+                copyToClipboard(currentUserId);
+                showToast('User ID copied!', 'success');
+            });
+            document.getElementById('revealRefCodeBtn').addEventListener('click', () => document.getElementById('refCodeDisplay').classList.toggle('blurred'));
+            document.getElementById('copyRefCodeBtn').addEventListener('click', () => {
+                copyToClipboard(currentReferralCode).then(ok => showToast(ok ? 'Referral code copied!' : 'Copy failed', ok ? 'success' : 'error'));
+            });
             document.getElementById('copyInviteLinkBtn').addEventListener('click', async () => {
                 const code = currentReferralCode || getStorage(REF_CODE_V2_KEY);
-                if (!code) { showModal('Error','No referral code found.'); return; }
-                const inviteUrl = `${window.location.origin}${window.location.pathname}?ref=${code}`;
-                const success = await copyToClipboard(inviteUrl);
-                showModal(success?'Copied':'Manual Copy', success?'Invite link copied to clipboard!':`Select and copy: <span style="font-family:monospace;">${inviteUrl}</span>`);
+                if (!code) { showToast('No referral code found', 'error'); return; }
+                const url = `${window.location.origin}${window.location.pathname}?ref=${code}`;
+                const ok = await copyToClipboard(url);
+                showToast(ok ? 'Invite link copied!' : 'Copy failed', ok ? 'success' : 'error');
             });
             document.getElementById('menuBtn').addEventListener('click', () => {
                 document.getElementById('sideMenu').classList.toggle('open');
@@ -1739,171 +1214,104 @@
                 document.getElementById('menuOverlay').classList.remove('active');
             });
 
-            // Event delegation for listing buttons
-            document.getElementById('openListingsContainer').addEventListener('click', (e) => {
-                const buyBtn = e.target.closest('.buy-btn');
-                if (buyBtn) {
-                    buyListing(buyBtn.dataset.id);
-                }
-            });
-            document.getElementById('myListingsContainer').addEventListener('click', (e) => {
-                const cancelBtn = e.target.closest('.cancel-btn');
-                if (cancelBtn) {
-                    cancelListing(cancelBtn.dataset.id);
-                }
-                const hashBtn = e.target.closest('.hash-btn');
-                if (hashBtn) {
-                    openHashModal(hashBtn.dataset.id);
-                }
-            });
-
-            // Stadium card
             document.getElementById('stadiumCard').addEventListener('click', async () => {
-                const globalDoc = await db.collection('global').doc('stats').get();
-                const data = globalDoc.exists ? globalDoc.data() : { stadiumsSold:0 };
-                const remaining = STADIUM_TOTAL_SUPPLY - (data.stadiumsSold || 0);
-                const balance = getUserBalance();
+                const d = await db.collection('users').doc(currentUserId).get();
+                const hasStadium = d.data()?.hasStadium === true;
+                const bal = getUserBalance();
                 const html = `
                     <div style="text-align:center;">
                         <div style="font-size:3rem;">🏟️</div>
                         <h3 style="color:#ffd700;">METAFOOT Stadium</h3>
                         <p class="stadium-desc">Limited Edition · Only ${STADIUM_TOTAL_SUPPLY.toLocaleString()} available</p>
                         <div class="stadium-price">2,000 $FOOT</div>
-                        <div class="stadium-supply-bar"><div class="stadium-supply-fill" style="width:${((data.stadiumsSold||0)/STADIUM_TOTAL_SUPPLY)*100}%;"></div></div>
-                        <p style="color:#ffcccc;">${data.stadiumsSold||0} / ${STADIUM_TOTAL_SUPPLY.toLocaleString()} sold · ${remaining.toLocaleString()} left</p>
-                        <button class="action-btn" id="stadiumBuyBtn" ${remaining<=0||balance<2000?'disabled':''}>${remaining<=0?'Sold Out':balance<2000?'Insufficient $FOOT':'Buy Now for 2,000 $FOOT'}</button>
-                    </div>
-                `;
+                        <p style="color:#ffcccc;">${hasStadium?'You already own one.':bal<2000?'Need more $FOOT':'Ready to buy!'}</p>
+                        <button class="action-btn" id="stadiumBuyBtn" ${hasStadium||bal<2000?'disabled':''}>${hasStadium?'Owned':bal<2000?'Insufficient $FOOT':'Buy Now for 2,000 $FOOT'}</button>
+                    </div>`;
                 customModalBox.innerHTML = html + '<button class="action-btn" style="margin-top:1rem;background:transparent;border:1px solid #ff5555;color:#ffaaaa;" onclick="document.getElementById(\'customModalOverlay\').classList.remove(\'active\')">Close</button>';
                 customModal.classList.add('active');
-                if (remaining>0 && balance>=2000) {
+                if (!hasStadium && bal>=2000) {
                     document.getElementById('stadiumBuyBtn').addEventListener('click', async () => { await buyStadiumFirestore(); customModal.classList.remove('active'); });
                 }
             });
 
-            // Vision card
             document.getElementById('visionCard').addEventListener('click', () => {
                 showModal('The METAFOOT Ecosystem', `
                     <div style="text-align:left; max-height:60vh; overflow-y:auto; padding:0 0.5rem;">
                         <h2 style="color:#ffaaaa; text-align:center;">🚀 What METAFOOT is building</h2>
                         <p style="margin-bottom:1rem;">A football universe where everyone can earn.</p>
                         <div class="section"><strong>🏠 Rental System</strong><br>Own a team? Rent it out for a fee. Earn passive income while others compete.</div>
-                        <div class="section"><strong>🧠 Train Player</strong><br>Every training session increases your player's value. Managers will compete to sign the best.</div>
-                        <div class="section"><strong>💰 Fair Earnings</strong><br>70% of tournament prizes go to the players, 30% to the manager. All enforced by smart contracts.</div>
-                        <div class="section"><strong>🏆 Tournaments</strong><br>Weekly leagues: $FOOT Survival, Mission, Classic, and Elite. Climb the ladder for huge prizes.</div>
-                        <div class="section"><strong>🎮 PvP Arena</strong><br>Challenge any manager in real‑time. Wager $FOOT and let your trained attributes decide the winner.</div>
-                        <div class="section"><strong>💳 $FOOT Virtual Card</strong><br>Spend your mined $FOOT anywhere. First online, then in METAFOOT physical shops.</div>
-                        <div class="section"><strong>🧠 Knowledge Challenge</strong><br>Earn extra $FOOT by answering quiz questions about the leagues you follow.</div>
-                        <div class="section"><strong>⚽ Football Academy</strong><br>Real‑world talent discovery. Part of the revenue flows back into the ecosystem.</div>
-                        <div class="section"><strong>🎯 The Game</strong><br>METAFOOT manager game – first on mobile (Unity), later on PC. You're a founding member.</div>
-                    </div>
-                `);
+                        <div class="section"><strong>🧠 Train Player</strong><br>Every training session increases your player's value.</div>
+                        <div class="section"><strong>💰 Fair Earnings</strong><br>70% of tournament prizes go to players, 30% to managers.</div>
+                        <div class="section"><strong>🏆 Tournaments</strong><br>Weekly leagues with huge prizes.</div>
+                        <div class="section"><strong>💳 $FOOT Virtual Card</strong><br>Spend your $FOOT anywhere.</div>
+                        <div class="section"><strong>⚽ Football Academy</strong><br>Real-world talent discovery.</div>
+                        <div class="section"><strong>🎯 The Game</strong><br>METAFOOT manager game – coming soon.</div>
+                    </div>`);
             });
         }
 
         async function attemptAutoReferral() {
             const pendingRef = localStorage.getItem('pending_ref_code');
             if (!pendingRef || !currentUserId) return;
-            if (pendingRef === currentReferralCode) {
-                localStorage.removeItem('pending_ref_code');
-                return;
-            }
+            if (pendingRef === currentReferralCode) { localStorage.removeItem('pending_ref_code'); return; }
             try {
                 await submitReferralRequest(pendingRef, currentUserId);
                 localStorage.removeItem('pending_ref_code');
-                showModal('Referral Submitted', 'Your referral request has been submitted for admin approval. You will receive 2 $FOOT once approved.');
-            } catch (e) {
-                console.warn('Auto referral failed:', e.message);
-                localStorage.removeItem('pending_ref_code');
-            }
+                showToast('Referral submitted for admin approval', 'success');
+            } catch(e) { console.warn('Auto referral failed:', e.message); localStorage.removeItem('pending_ref_code'); }
         }
 
-        // Tasks and announcements functions (unchanged)
         async function renderAnnouncementTasks() {
-            const container = document.getElementById('announcementTasksContainer');
-            if (!container) return;
+            const c = document.getElementById('announcementTasksContainer');
+            if (!c) return;
             try {
-                const userDoc = await db.collection('users').doc(currentUserId).get();
-                const claimed = userDoc.exists ? (userDoc.data().claimedAnnouncements || []) : [];
-
-                const snap = await db.collection('announcements')
-                    .where('active', '==', true)
-                    .orderBy('createdAt', 'desc')
-                    .get();
-
-                container.innerHTML = '';
+                const uDoc = await db.collection('users').doc(currentUserId).get();
+                const claimed = uDoc.exists ? (uDoc.data().claimedAnnouncements || []) : [];
+                const snap = await db.collection('announcements').where('active', '==', true).orderBy('createdAt', 'desc').get();
+                c.innerHTML = '';
                 snap.forEach(doc => {
                     const ann = doc.data();
-                    const alreadyClaimed = claimed.includes(doc.id);
+                    const already = claimed.includes(doc.id);
                     const div = document.createElement('div');
                     div.className = 'task-announcement';
-                    div.innerHTML = `
-                        <div style="display:flex; justify-content:space-between; align-items:center;">
-                            <span>📢 ${ann.title}</span>
-                            ${alreadyClaimed
-                                ? '<button class="task-btn" disabled>Claimed</button>'
-                                : `<button class="task-btn claim-ann-btn" data-id="${doc.id}" data-link="${ann.link || ''}">View & Earn 0.6 $FOOT</button>`
-                            }
-                        </div>
-                    `;
-                    container.appendChild(div);
+                    div.innerHTML = `<div style="display:flex; justify-content:space-between; align-items:center;">
+                        <span>📢 ${ann.title}</span>
+                        ${already ? '<button class="task-btn" disabled>Claimed</button>'
+                                  : `<button class="task-btn claim-ann-btn" data-id="${doc.id}" data-link="${ann.link || ''}">View & Earn 0.6 $FOOT</button>`}
+                    </div>`;
+                    c.appendChild(div);
                 });
-                container.addEventListener('click', (e) => {
-                    const btn = e.target.closest('.claim-ann-btn');
-                    if (!btn) return;
-                    const id = btn.dataset.id;
-                    const link = btn.dataset.link;
-                    claimAnnouncement(id, link);
+                c.querySelectorAll('.claim-ann-btn').forEach(btn => {
+                    btn.addEventListener('click', () => claimAnnouncement(btn.dataset.id, btn.dataset.link));
                 });
-            } catch (e) {
-                console.error('Failed to load announcements:', e);
-                container.innerHTML = '<p class="error">Could not load announcements.</p>';
-            }
+            } catch(e) { c.innerHTML = '<p class="error">Could not load announcements.</p>'; }
         }
 
         async function claimAnnouncement(announcementId, link) {
             if (!currentUserId) return;
             const userRef = db.collection('users').doc(currentUserId);
-            const statsRef = db.collection('global').doc('stats');
-
             try {
-                await db.runTransaction(async (transaction) => {
-                    const userDoc = await transaction.get(userRef);
-                    if (!userDoc.exists) throw new Error('User not found');
-                    const data = userDoc.data();
+                await db.runTransaction(async (t) => {
+                    const uDoc = await t.get(userRef);
+                    if (!uDoc.exists) throw new Error('User not found');
+                    const data = uDoc.data();
                     const claimed = data.claimedAnnouncements || [];
                     if (claimed.includes(announcementId)) throw new Error('Already claimed');
-
-                    const newBalance = (data.balance || 0) + 0.6;
+                    const newBal = (data.balance || 0) + 0.6;
                     claimed.push(announcementId);
-                    transaction.set(userRef, {
-                        balance: newBalance,
-                        claimedAnnouncements: claimed
-                    }, { merge: true });
-
-                    transaction.set(statsRef, {
-                        totalDistributed: firebase.firestore.FieldValue.increment(0.6)
-                    }, { merge: true });
-
-                    return newBalance;
-                }).then(() => {
-                    addToUserBalance(0.6);
+                    t.update(userRef, { balance: newBal, claimedAnnouncements: claimed });
+                    return newBal;
+                }).then((newBal) => {
+                    setUserBalance(newBal);
                     updateWalletDisplay();
-                    setStorage('claimedAnnouncements', JSON.stringify(
-                        [...(JSON.parse(getStorage('claimedAnnouncements') || '[]')), announcementId]
-                    ));
+                    setStorage('claimedAnnouncements', JSON.stringify([...(JSON.parse(getStorage('claimedAnnouncements') || '[]')), announcementId]));
                     renderAnnouncementTasks();
-                    showModal('Reward Earned', '🎉 You earned 0.6 $FOOT from the announcement!');
-                    if (link) {
-                        window.open(link, '_blank');
-                    }
+                    showToast('You earned 0.6 $FOOT!', 'success');
+                    if (link) window.open(link, '_blank');
                 });
-            } catch (e) {
-                if (e.message === 'Already claimed') {
-                    showModal('Already Claimed', 'You already claimed this reward.');
-                } else {
-                    showModal('Error', e.message);
-                }
+            } catch(e) {
+                if (e.message === 'Already claimed') showToast('Already claimed', 'error');
+                else showToast('Error: ' + e.message, 'error');
             }
         }
 
@@ -1913,32 +1321,32 @@
             const fmt = (last) => {
                 const rem = COOLDOWN_MS - (now - last);
                 if (rem <= 0) return 'Ready';
-                const totalMinutes = Math.floor(rem / 60000);
-                const hours = Math.floor(totalMinutes / 60);
-                const minutes = totalMinutes % 60;
-                if (hours > 0) {
-                    return `${hours}h ${minutes}m`;
-                } else {
-                    return `${minutes}m`;
-                }
+                const tm = Math.floor(rem / 60000), h = Math.floor(tm / 60), m = tm % 60;
+                return h > 0 ? `${h}h ${m}m` : `${m}m`;
             };
             document.getElementById('dailyTasksList').innerHTML = `
                 <li><span>📱 Visit Telegram Channel</span><button class="task-btn" id="telegramTaskBtn" ${tgReady?'':'disabled'}>${tgReady?'0.6 $FOOT':fmt(tgLast)}</button></li>
                 <li><span>🐦 Visit X (Twitter)</span><button class="task-btn" id="xTaskBtn" ${xReady?'':'disabled'}>${xReady?'0.6 $FOOT':fmt(xLast)}</button></li>`;
-            document.getElementById('telegramTaskBtn')?.addEventListener('click', ()=> {
+            document.getElementById('telegramTaskBtn')?.addEventListener('click', async () => {
                 if (!tgReady) return;
                 setStorage(TG_LAST_KEY, Date.now().toString());
-                addToUserBalance(0.6);
-                db.collection('global').doc('stats').update({ totalDistributed: firebase.firestore.FieldValue.increment(0.6) });
-                saveUserToFirestore(); updateMiningStats(); renderTasks();
+                const d = await db.collection('users').doc(currentUserId).get();
+                const bal = (d.data().balance || 0) + 0.6;
+                await db.collection('users').doc(currentUserId).update({ balance: bal });
+                setUserBalance(bal);
+                updateMiningStats();
+                renderTasks();
                 openAppOrWeb('tg://resolve?domain=metafoott', 'https://t.me/metafoott');
             });
-            document.getElementById('xTaskBtn')?.addEventListener('click', ()=> {
+            document.getElementById('xTaskBtn')?.addEventListener('click', async () => {
                 if (!xReady) return;
                 setStorage(X_LAST_KEY, Date.now().toString());
-                addToUserBalance(0.6);
-                db.collection('global').doc('stats').update({ totalDistributed: firebase.firestore.FieldValue.increment(0.6) });
-                saveUserToFirestore(); updateMiningStats(); renderTasks();
+                const d = await db.collection('users').doc(currentUserId).get();
+                const bal = (d.data().balance || 0) + 0.6;
+                await db.collection('users').doc(currentUserId).update({ balance: bal });
+                setUserBalance(bal);
+                updateMiningStats();
+                renderTasks();
                 openAppOrWeb('twitter://user?screen_name=METAFOOTT', 'https://x.com/METAFOOTT');
             });
             renderAnnouncementTasks();
@@ -1952,9 +1360,7 @@
             document.body.appendChild(iframe);
             setTimeout(() => {
                 document.body.removeChild(iframe);
-                if (Date.now() - start < 2000) {
-                    window.open(webUrl, '_blank');
-                }
+                if (Date.now() - start < 2000) window.open(webUrl, '_blank');
             }, 600);
         }
     });
